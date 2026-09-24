@@ -4,7 +4,8 @@ const express = require('express');
 const cors = require('cors');
 const { spawn } = require('child_process');
 const config = require('./lib/config');
-const { getEvents, getSnapshot } = require('./lib/normalize');
+const { getEvents, getSourceReport, startScheduler } = require('./lib/normalize');
+const { LAYERS } = require('./lib/event');
 const { loadMockEvents, MOCK_PATH } = require('./lib/mock');
 const { AMER, LOCAL_RADIUS_KM } = require('./lib/geo');
 const { wards, getWard } = require('./lib/wards');
@@ -15,29 +16,48 @@ const app = express();
 app.use(cors()); // all origins: the frontend is a separate Vite dev server
 
 // GET /events?scope=global|local  (default global)
+//            &layers=news,alerts,weather  (optional; default all layers)
+// Always answered from the in-memory cache; never triggers an upstream call.
 app.get('/events', async (req, res, next) => {
   const scope = String(req.query.scope ?? 'global').toLowerCase();
   if (!SCOPES.includes(scope)) {
     return res.status(400).json({ error: `scope must be one of: ${SCOPES.join(', ')}` });
   }
+  let layers = null;
+  if (req.query.layers !== undefined) {
+    layers = String(req.query.layers).split(',').map((l) => l.trim().toLowerCase()).filter(Boolean);
+    const unknown = layers.filter((l) => !LAYERS.includes(l));
+    if (unknown.length) {
+      return res.status(400).json({ error: `unknown layer(s): ${unknown.join(', ')}. Valid: ${LAYERS.join(', ')}` });
+    }
+  }
   try {
-    res.json(await getEvents(scope));
+    res.json(await getEvents(scope, layers));
   } catch (err) {
     next(err);
   }
 });
 
 // GET /health
+//   feeds   { key: status }  (legacy shape, kept)
+//   sources { key: { label, layer, status: live|mock|down|disabled, stale, count, lastSuccess, lastError, ... } }
+//   layers  { layer: eventCount }
+//   liveSources  number of real (non-simulated) sources currently live
 app.get('/health', async (req, res, next) => {
   try {
-    const { events, feeds } = await getSnapshot();
-    res.json({ status: 'ok', mode: config.useMock ? 'mock' : 'live', feeds, count: events.length });
+    const { events, feeds, sources, layers, liveSources } = await getSourceReport();
+    res.json({ status: 'ok', mode: config.useMock ? 'mock' : 'live', feeds, count: events.length, liveSources, layers, sources });
   } catch (err) {
     next(err);
   }
 });
 app.get('/api/wards', (req, res) => res.json(wards));
 app.get('/api/wards/:id', (req, res) => { const ward = getWard(req.params.id); return ward ? res.json(ward) : res.status(404).json({ error: 'ward not found' }); });
+
+// feat/local and feat/globe's cache-backed pipeline (see docs/CONTRACT.md). Additive:
+// the routes above are untouched.
+app.use('/api/local', require('./routes/local'));
+app.use('/api/globe', require('./routes/globe'));
 
 app.use((req, res) => res.status(404).json({ error: 'not found' }));
 
@@ -58,16 +78,16 @@ if (require.main === module) {
     console.log(
       config.useMock
         ? '[mode] USE_MOCK=true - serving events.json only, no network calls'
-        : `[mode] live feeds (USGS, Open-Meteo, Open-Meteo AQ) + simulated Amer feed; local scope = ${LOCAL_RADIUS_KM} km around ${AMER.lat}, ${AMER.lng}`,
+        : `[mode] live feeds (USGS, Open-Meteo + world city grid, GDELT, NDMA SACHET) + simulated Amer feed; local scope = ${LOCAL_RADIUS_KM} km around ${AMER.lat}, ${AMER.lng}`,
     );
     loadMockEvents().then((mock) => console.log(`[mock] ${MOCK_PATH} - ${mock.length} valid event(s)`));
-    // Populate the slow Overpass snapshot asynchronously on startup; routes only read its file.
+    // Populate the slow Overpass exposure snapshot asynchronously on startup; the exposure
+    // adapter only ever reads its file, never triggers this itself.
     const exposureBuild = spawn(process.execPath, ['scripts/fetch-exposure.js'], { cwd: __dirname, stdio: 'ignore', windowsHide: true });
     exposureBuild.unref();
-    // Warm the cache and print the live/mock status of each feed right at startup.
-    getSnapshot().catch((err) => console.error('[server] warm-up failed:', err));
-    // Upstream feeds are warmed/refreshed here; browser reads only this server cache.
-    setInterval(() => getSnapshot().catch(() => {}), config.backgroundRefreshMs).unref();
+    // Background refresh: every source on its own timer (including the ones above);
+    // endpoints only read the cache.
+    startScheduler().catch((err) => console.error('[server] scheduler failed to start:', err));
   });
   server.on('error', (err) => {
     console.error(

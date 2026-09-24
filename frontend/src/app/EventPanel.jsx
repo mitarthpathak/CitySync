@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ExternalLink, X } from 'lucide-react'
 import { colorOf, nameOf } from '../lib/severity.js'
+import { LAYER_BY_ID, TAGS, layerOf, safeUrl, tagOf } from '../lib/layers.js'
 import { formatAbsolute, formatAgo } from '../lib/time.js'
 import { useReducedMotion } from '../lib/useReducedMotion.js'
 import { useIsMobile } from './useIsMobile.js'
@@ -19,6 +20,26 @@ const humanizeValue = (value) => {
   return JSON.stringify(value, null, 2)
 }
 
+/** A list of { title, url } items (GDELT articles) as real, safe links. */
+function LinkList({ items }) {
+  return (
+    <ul className="cp-panel-links">
+      {items.map((item, i) => {
+        const href = safeUrl(item.url)
+        const text = item.title || item.url
+        return (
+          <li key={item.url ?? i}>
+            {href ? <a href={href} target="_blank" rel="noreferrer noopener">{text}</a> : text}
+            {item.domain && <span> · {item.domain}</span>}
+          </li>
+        )
+      })}
+    </ul>
+  )
+}
+
+const isLinkList = (value) => Array.isArray(value) && value.length > 0 && value.every((v) => v && typeof v === 'object' && typeof v.url === 'string')
+
 /** Plain-language rendering of an event's `raw` object: one row per field. */
 function RawFields({ raw }) {
   const entries = Object.entries(raw ?? {})
@@ -26,6 +47,15 @@ function RawFields({ raw }) {
   return (
     <dl className="cp-panel-raw">
       {entries.map(([key, value]) => {
+        if (isLinkList(value)) {
+          return (
+            <div key={key}>
+              <dt>{humanize(key)}</dt>
+              <dd><LinkList items={value} /></dd>
+            </div>
+          )
+        }
+        if (Array.isArray(value) && value.every((v) => typeof v === 'string')) value = value.join('; ')
         const text = humanizeValue(value)
         const multiline = text.includes('\n')
         return (
@@ -43,6 +73,13 @@ function ScoreBars({ raw }) {
   const scores = [['Hazard', raw?.hazard_score], ['Exposure', raw?.exposure_score], ['Impact', raw?.impact], ['Confidence', raw?.confidence_score]]
   if (!scores.some(([, value]) => Number.isFinite(value))) return null
   return <div className="cp-score-bars">{scores.map(([label, value]) => <div key={label}><span>{label} <b>{Math.min(100, Math.round(value || 0))}</b></span><i><em style={{ width: `${Math.min(100, Math.max(0, value || 0))}%` }} /></i></div>)}</div>
+}
+
+/** The event's honest trust tag. Non-live data gets a loud badge; live data a quiet one. */
+function TagBadge({ event }) {
+  const tag = tagOf(event)
+  const { label, badge } = TAGS[tag]
+  return <span className={badge ? 'cp-chip-sim' : 'cp-chip-tag'} data-tag={tag} title={label}>{badge ?? label.toUpperCase()}</span>
 }
 
 /**
@@ -96,6 +133,7 @@ export default function EventPanel({ event, onClose }) {
     }
   }, [event, onClose])
 
+  const sourceHref = event ? safeUrl(event.sourceUrl) : null
   const transition = reduced ? { duration: 0 } : { duration: 0.34, ease: [0.4, 0, 0.2, 1] }
   const panelMotion = mobile
     ? { initial: { y: '100%' }, animate: { y: 0 }, exit: { y: '100%' } }
@@ -136,14 +174,30 @@ export default function EventPanel({ event, onClose }) {
               <span className="cp-chip-severity" style={{ '--chip-color': colorOf(event.severity) }}>
                 <i />Severity {event.severity} · {nameOf(event.severity)}
               </span>
-              {event.isSimulated && <span className="cp-chip-sim">SIMULATED</span>}
-              {event.tag && <span className="cp-chip-sim">{event.tag}</span>}
+              <TagBadge event={event} />
             </div>
+            {tagOf(event) === 'MEDIA_REPORTED' && (
+              <p className="cp-panel-note">Media mentions only: news coverage placed by a place name in the headline. Not a confirmed incident.</p>
+            )}
+            {tagOf(event) === 'SIMULATED' && (
+              <p className="cp-panel-note">Simulated or mock data. Not a real measurement.</p>
+            )}
 
             <dl className="cp-panel-meta">
               <div>
                 <dt>Source</dt>
-                <dd>{event.source} {event.sourceUrl && <a href={event.sourceUrl} target="_blank" rel="noreferrer" className="cp-panel-maplink">Evidence <ExternalLink /></a>}</dd>
+                <dd>
+                  {event.source}
+                  {sourceHref && (
+                    <a href={sourceHref} target="_blank" rel="noreferrer noopener" className="cp-panel-maplink">
+                      View source <ExternalLink />
+                    </a>
+                  )}
+                </dd>
+              </div>
+              <div>
+                <dt>Layer</dt>
+                <dd>{LAYER_BY_ID[layerOf(event)]?.label ?? layerOf(event)}</dd>
               </div>
               <div>
                 <dt>When</dt>

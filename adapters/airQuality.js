@@ -48,4 +48,4 @@ async function fetchAirQuality() {
   ];
 }
 
-module.exports = { fetchAirQuality };
+module.exports = { fetchAirQuality, bandFromAqi };

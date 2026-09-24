@@ -4,9 +4,11 @@ import ThemeButton from './ThemeButton.jsx'
 import { useHealth } from './useEvents.js'
 
 function HealthStatus() {
-  const { status, mode, count, error } = useHealth()
+  const { status, mode, count, liveSources, error } = useHealth()
   const known = status === 'ok'
-  const label = !known ? 'Reconnecting…' : mode === 'mock' ? `${count ?? 0} events (mock)` : `${count ?? 0} events live`
+  // "7 live sources · 312 events": the simulator never counts as a live source (backend rule).
+  const sources = Number.isFinite(liveSources) ? `${liveSources} live source${liveSources === 1 ? '' : 's'} · ` : ''
+  const label = !known ? 'Reconnecting…' : mode === 'mock' ? `${count ?? 0} events (mock)` : `${sources}${count ?? 0} events`
   return (
     <span className="cp-status" data-state={!known ? 'offline' : mode === 'mock' ? 'mock' : 'live'} title={error || undefined}>
       <span className="cp-live" aria-hidden="true"><i /></span>

@@ -92,28 +92,49 @@ export function useEvents({ scope = 'global', lat, lng, pollMs = DEFAULT_POLL_MS
 
 const HEALTH_POLL_MS = 20_000
 
-/** GET /health -> { status, mode, feeds, count, error, lastUpdated }. For the top bar's live/mock pill. */
-export function useHealth(pollMs = HEALTH_POLL_MS) {
-  const [state, setState] = useState({ status: null, mode: null, feeds: null, count: null, error: null, lastUpdated: null })
+// One shared /health poller for every subscriber (top bar + layer panel), not one each.
+const EMPTY_HEALTH = { status: null, mode: null, feeds: null, count: null, liveSources: null, layers: null, sources: null, error: null, lastUpdated: null }
+const health = { state: EMPTY_HEALTH, listeners: new Set(), timer: null }
 
-  useEffect(() => {
-    let cancelled = false
-    const load = async () => {
-      try {
-        const res = await fetch(`${API_BASE}/health`, { headers: { Accept: 'application/json' }, cache: 'no-store' })
-        if (!res.ok) throw new Error(`HTTP ${res.status}`)
-        const data = await res.json()
-        if (cancelled) return
-        setState({ status: data.status ?? null, mode: data.mode ?? null, feeds: data.feeds ?? null, count: Number.isFinite(data.count) ? data.count : null, error: null, lastUpdated: new Date() })
-      } catch (err) {
-        if (cancelled) return
-        setState((prev) => ({ ...prev, error: err.message || 'request failed' }))
-      }
+async function loadHealth() {
+  let next
+  try {
+    const res = await fetch(`${API_BASE}/health`, { headers: { Accept: 'application/json' }, cache: 'no-store' })
+    if (!res.ok) throw new Error(`HTTP ${res.status}`)
+    const data = await res.json()
+    next = {
+      status: data.status ?? null,
+      mode: data.mode ?? null,
+      feeds: data.feeds ?? null,
+      count: Number.isFinite(data.count) ? data.count : null,
+      liveSources: Number.isFinite(data.liveSources) ? data.liveSources : null,
+      layers: data.layers && typeof data.layers === 'object' ? data.layers : null,
+      sources: data.sources && typeof data.sources === 'object' ? data.sources : null,
+      error: null,
+      lastUpdated: new Date(),
     }
-    load()
-    const timer = setInterval(() => { if (!document.hidden) load() }, pollMs)
-    return () => { cancelled = true; clearInterval(timer) }
-  }, [pollMs])
+  } catch (err) {
+    next = { ...health.state, error: err.message || 'request failed' }
+  }
+  health.state = next
+  health.listeners.forEach((fn) => fn(next))
+}
 
+/** GET /health -> { status, mode, feeds, count, liveSources, layers, sources, error, lastUpdated }. */
+export function useHealth() {
+  const [state, setState] = useState(health.state)
+  useEffect(() => {
+    health.listeners.add(setState)
+    if (health.listeners.size === 1) {
+      loadHealth()
+      health.timer = setInterval(() => { if (!document.hidden) loadHealth() }, HEALTH_POLL_MS)
+    } else {
+      setState(health.state)
+    }
+    return () => {
+      health.listeners.delete(setState)
+      if (health.listeners.size === 0) clearInterval(health.timer)
+    }
+  }, [])
   return state
 }
