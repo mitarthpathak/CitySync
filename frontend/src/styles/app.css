@@ -129,12 +129,7 @@ body.cp-body {
 .cp-legend li { display: flex; align-items: center; gap: 8px; height: 16.5px; font-size: 11px; color: var(--cp-muted); }
 
 .cp-globe-panel { position: relative; min-width: 0; }
-.cp-globe { position: absolute; inset: 0; }
-.cp-globe-canvas { display: block; width: 100%; height: 100%; }
-.cp-globe-slot {
-  position: absolute; left: 50%; bottom: 14px; margin: 0; transform: translateX(-50%);
-  font-size: 10px; letter-spacing: 0.04em; color: var(--cp-muted); opacity: 0.6; pointer-events: none;
-}
+.cp-globe-panel > .gv-root { position: absolute; inset: 0; }
 .cp-coord { position: absolute; font-size: 9px; letter-spacing: 0.1em; color: var(--cp-muted); pointer-events: none; }
 .cp-coord-n { left: 22%; top: 129px; }
 .cp-coord-e { left: 82.4%; top: 375px; }

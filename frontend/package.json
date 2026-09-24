@@ -16,6 +16,7 @@
     "lucide-react": "1.17.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "react-globe.gl": "^2.38.0",
     "react-router-dom": "^7.18.4",
     "shadcn": "4.19.0",
     "tailwind-merge": "3.4.0",

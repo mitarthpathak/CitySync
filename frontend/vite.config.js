@@ -9,6 +9,6 @@ export default defineConfig({
     alias: { '@': path.resolve(import.meta.dirname, 'src') },
   },
   server: { port: 5173 },
-  // three.js is its own lazy chunk (only the globe screen loads it); ~500 kB is expected.
-  build: { chunkSizeWarningLimit: 700 },
+  // The globe (react-globe.gl + three.js) is its own lazy chunk that only /app loads; ~2 MB is expected.
+  build: { chunkSizeWarningLimit: 2100 },
 })

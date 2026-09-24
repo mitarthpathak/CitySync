@@ -1,10 +1,9 @@
 import { lazy, Suspense, useState } from 'react'
 import { AirVent, ArrowUp, Bell, ChevronRight, CloudRain, Radio, Waves } from 'lucide-react'
-import { useTheme } from './useTheme.js'
 import { liveFeed, severity, signals } from './data.js'
 
-// three.js is big and only this screen needs it, so it loads on demand (keeps the landing page light).
-const GlobeCanvas = lazy(() => import('./GlobeCanvas.jsx'))
+// The globe (react-globe.gl + three.js) is big and only this screen needs it, so it loads on demand.
+const GlobeView = lazy(() => import('./GlobeView.jsx'))
 
 const LAYERS = [
   { id: 'earthquakes', label: 'Earthquakes', Icon: Waves },
@@ -14,7 +13,6 @@ const LAYERS = [
 ]
 
 export default function GlobalView() {
-  const { dark } = useTheme()
   const [layers, setLayers] = useState({ earthquakes: true, weather: true, air_quality: true, incidents: true })
   const toggleLayer = (id) => setLayers((current) => ({ ...current, [id]: !current[id] }))
 
@@ -56,7 +54,7 @@ export default function GlobalView() {
 
         <div className="cp-globe-panel">
           <Suspense fallback={null}>
-            <GlobeCanvas layers={layers} dark={dark} />
+            <GlobeView />
           </Suspense>
           <span className="cp-coord cp-coord-n" aria-hidden="true">N 42°</span>
           <span className="cp-coord cp-coord-e" aria-hidden="true">E 74°</span>

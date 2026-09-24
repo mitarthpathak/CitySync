@@ -1,0 +1,133 @@
+/* GlobeView: styles for the globe, its Normal/Satellite toggle, status pill and tooltip.
+   Tokens follow the app palette; the component's `theme` prop (or the app theme) picks the set. */
+
+.gv-root {
+  --gv-fg: #171716;
+  --gv-muted: #73736d;
+  --gv-line: #dfdfda;
+  --gv-surface: #efefec;
+  --gv-card: #ffffff;
+  --gv-green: #40a56b;
+  --gv-red: #d4345a;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 320px;
+  overflow: hidden;
+  font-family: Arial, Helvetica, sans-serif;
+  color: var(--gv-fg);
+}
+.gv-root[data-theme='dark'] {
+  --gv-fg: #ededea;
+  --gv-muted: #9a9b94;
+  --gv-line: #2c2e2a;
+  --gv-surface: #1b1c1a;
+  --gv-card: #181917;
+  --gv-green: #58c78a;
+  --gv-red: #f0557f;
+}
+
+.gv-root canvas { display: block; outline: none; }
+.gv-root .scene-container { cursor: grab; }
+.gv-root .scene-container:active { cursor: grabbing; }
+
+/* ---- Normal / Satellite toggle ------------------------------------------- */
+.gv-toggle {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 2;
+  display: flex;
+  gap: 4px;
+  padding: 3px;
+  border: 1px solid var(--gv-line);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--gv-surface) 92%, transparent);
+  backdrop-filter: blur(6px);
+}
+.gv-toggle button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 26px;
+  padding: 0 11px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--gv-muted);
+  font: 700 10px/1 Arial, Helvetica, sans-serif;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.gv-toggle button:hover:not(.is-active) { color: var(--gv-fg); }
+.gv-toggle button.is-active { background: var(--gv-fg); color: var(--gv-card); }
+.gv-toggle button:focus-visible { outline: 2px solid var(--gv-green); outline-offset: 1px; }
+.gv-toggle svg { width: 13px; height: 13px; }
+
+/* ---- status pill ------------------------------------------------------------ */
+.gv-status {
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  padding: 5px 9px;
+  border: 1px solid var(--gv-line);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--gv-card) 88%, transparent);
+  backdrop-filter: blur(6px);
+  font-size: 10px;
+  line-height: 12px;
+  color: var(--gv-muted);
+  pointer-events: none;
+}
+.gv-status i { width: 6px; height: 6px; border-radius: 50%; background: var(--gv-muted); }
+.gv-status[data-status='live'] i { background: var(--gv-green); }
+.gv-status[data-status='offline'] i { background: var(--gv-red); }
+
+/* ---- hover tooltip (globe.gl renders it as HTML inside the root) --------------- */
+.gv-root .float-tooltip-kap {
+  max-width: 260px;
+  padding: 0;
+  border: 1px solid var(--gv-line);
+  border-radius: 6px;
+  background: var(--gv-card);
+  color: var(--gv-fg);
+  font: 11px/1.35 Arial, Helvetica, sans-serif;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16);
+}
+.gv-tip { padding: 8px 10px; }
+.gv-tip-title { font-weight: 700; font-size: 12px; letter-spacing: -0.01em; }
+.gv-tip-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; margin-top: 4px; color: var(--gv-muted); }
+.gv-tip-dot { width: 7px; height: 7px; border-radius: 50%; }
+.gv-tip-tag {
+  padding: 1px 5px;
+  border: 1px solid var(--gv-line);
+  border-radius: 3px;
+  background: var(--gv-surface);
+  color: var(--gv-fg);
+  font-size: 8.5px;
+  letter-spacing: 0.1em;
+}
+
+/* ---- no WebGL --------------------------------------------------------------------- */
+.gv-unavailable {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--gv-muted);
+}
+
+@media (max-width: 640px) {
+  .gv-toggle button { padding: 0 8px; }
+  .gv-toggle button svg { display: none; }
+}
