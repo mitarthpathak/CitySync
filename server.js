@@ -3,7 +3,8 @@
 const express = require('express');
 const cors = require('cors');
 const config = require('./lib/config');
-const { getEvents, getSnapshot } = require('./lib/normalize');
+const { getEvents, getSourceReport, startScheduler } = require('./lib/normalize');
+const { LAYERS } = require('./lib/event');
 const { loadMockEvents, MOCK_PATH } = require('./lib/mock');
 const { AMER, LOCAL_RADIUS_KM } = require('./lib/geo');
 
@@ -13,23 +14,37 @@ const app = express();
 app.use(cors()); // all origins: the frontend is a separate Vite dev server
 
 // GET /events?scope=global|local  (default global)
+//            &layers=news,alerts,weather  (optional; default all layers)
+// Always answered from the in-memory cache; never triggers an upstream call.
 app.get('/events', async (req, res, next) => {
   const scope = String(req.query.scope ?? 'global').toLowerCase();
   if (!SCOPES.includes(scope)) {
     return res.status(400).json({ error: `scope must be one of: ${SCOPES.join(', ')}` });
   }
+  let layers = null;
+  if (req.query.layers !== undefined) {
+    layers = String(req.query.layers).split(',').map((l) => l.trim().toLowerCase()).filter(Boolean);
+    const unknown = layers.filter((l) => !LAYERS.includes(l));
+    if (unknown.length) {
+      return res.status(400).json({ error: `unknown layer(s): ${unknown.join(', ')}. Valid: ${LAYERS.join(', ')}` });
+    }
+  }
   try {
-    res.json(await getEvents(scope));
+    res.json(await getEvents(scope, layers));
   } catch (err) {
     next(err);
   }
 });
 
 // GET /health
+//   feeds   { key: status }  (legacy shape, kept)
+//   sources { key: { label, layer, status: live|mock|down|disabled, stale, count, lastSuccess, lastError, ... } }
+//   layers  { layer: eventCount }
+//   liveSources  number of real (non-simulated) sources currently live
 app.get('/health', async (req, res, next) => {
   try {
-    const { events, feeds } = await getSnapshot();
-    res.json({ status: 'ok', mode: config.useMock ? 'mock' : 'live', feeds, count: events.length });
+    const { events, feeds, sources, layers, liveSources } = await getSourceReport();
+    res.json({ status: 'ok', mode: config.useMock ? 'mock' : 'live', feeds, count: events.length, liveSources, layers, sources });
   } catch (err) {
     next(err);
   }
@@ -59,11 +74,11 @@ if (require.main === module) {
     console.log(
       config.useMock
         ? '[mode] USE_MOCK=true - serving events.json only, no network calls'
-        : `[mode] live feeds (USGS, Open-Meteo, Open-Meteo AQ) + simulated Amer feed; local scope = ${LOCAL_RADIUS_KM} km around ${AMER.lat}, ${AMER.lng}`,
+        : `[mode] live feeds (USGS, Open-Meteo + world city grid, GDELT, NDMA SACHET) + simulated Amer feed; local scope = ${LOCAL_RADIUS_KM} km around ${AMER.lat}, ${AMER.lng}`,
     );
     loadMockEvents().then((mock) => console.log(`[mock] ${MOCK_PATH} - ${mock.length} valid event(s)`));
-    // Warm the cache and print the live/mock status of each feed right at startup.
-    getSnapshot().catch((err) => console.error('[server] warm-up failed:', err));
+    // Background refresh: every source on its own timer; endpoints only read the cache.
+    startScheduler().catch((err) => console.error('[server] scheduler failed to start:', err));
   });
   server.on('error', (err) => {
     console.error(

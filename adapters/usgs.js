@@ -29,6 +29,7 @@ function toEvent(feature) {
     source: 'USGS',
     isSimulated: false,
     raw: { magnitude, depthKm },
+    sourceUrl: typeof properties.url === 'string' ? properties.url : null,
   });
 }
 

@@ -115,6 +115,26 @@
   letter-spacing: 0.1em;
 }
 
+.gv-tip-tag[data-tag='MEDIA_REPORTED'] { color: #2762c9; border-color: #2762c9; }
+.gv-tip-tag[data-tag='SIMULATED'] { color: #c77812; border-color: #c77812; }
+.gv-root[data-theme='dark'] .gv-tip-tag[data-tag='MEDIA_REPORTED'] { color: #6a9bff; border-color: #6a9bff; }
+.gv-root[data-theme='dark'] .gv-tip-tag[data-tag='SIMULATED'] { color: #e7982f; border-color: #e7982f; }
+
+/* ---- cluster count label (crowded area) -------------------------------------------- */
+.gv-cluster-count {
+  transform: translate(-50%, -50%);
+  min-width: 18px;
+  padding: 1px 5px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--gv-card) 85%, transparent);
+  border: 1px solid var(--gv-line);
+  color: var(--gv-fg);
+  font: 700 10px/14px Arial, Helvetica, sans-serif;
+  text-align: center;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
 /* ---- tile attribution (only shown once the tile engine is actually active) ----- */
 .gv-tile-credit {
   position: absolute;

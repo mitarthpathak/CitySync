@@ -9,19 +9,25 @@
     "severity": 5,
     "source": "USGS",
     "isSimulated": false,
-    "raw": { "magnitude": 5.2, "depthKm": 32 }
+    "raw": {
+      "magnitude": 5.2,
+      "depthKm": 32
+    }
   },
   {
     "id": "eq-id-002",
     "type": "earthquake",
     "title": "M5.8 earthquake near Sumatra, Indonesia",
     "lat": -0.7893,
-    "lng": 100.6500,
+    "lng": 100.65,
     "timestamp": "2026-09-24T03:40:00Z",
     "severity": 5,
     "source": "USGS",
     "isSimulated": false,
-    "raw": { "magnitude": 5.8, "depthKm": 18 }
+    "raw": {
+      "magnitude": 5.8,
+      "depthKm": 18
+    }
   },
   {
     "id": "eq-cl-003",
@@ -33,19 +39,25 @@
     "severity": 4,
     "source": "USGS",
     "isSimulated": false,
-    "raw": { "magnitude": 4.6, "depthKm": 45 }
+    "raw": {
+      "magnitude": 4.6,
+      "depthKm": 45
+    }
   },
   {
     "id": "aq-del-004",
     "type": "air_quality",
     "title": "Delhi air quality unhealthy (US AQI 168)",
     "lat": 28.6139,
-    "lng": 77.2090,
+    "lng": 77.209,
     "timestamp": "2026-09-24T05:00:00Z",
     "severity": 4,
     "source": "Open-Meteo AQ",
     "isSimulated": false,
-    "raw": { "us_aqi": 168, "pm2_5": 89 }
+    "raw": {
+      "us_aqi": 168,
+      "pm2_5": 89
+    }
   },
   {
     "id": "aq-bj-005",
@@ -57,7 +69,10 @@
     "severity": 4,
     "source": "Open-Meteo AQ",
     "isSimulated": false,
-    "raw": { "us_aqi": 155, "pm2_5": 78 }
+    "raw": {
+      "us_aqi": 155,
+      "pm2_5": 78
+    }
   },
   {
     "id": "wx-mnl-006",
@@ -69,7 +84,10 @@
     "severity": 4,
     "source": "Open-Meteo",
     "isSimulated": false,
-    "raw": { "weather_code": 95, "temperature_c": 29 }
+    "raw": {
+      "weather_code": 95,
+      "temperature_c": 29
+    }
   },
   {
     "id": "wx-lon-007",
@@ -81,9 +99,11 @@
     "severity": 3,
     "source": "Open-Meteo",
     "isSimulated": false,
-    "raw": { "weather_code": 61, "temperature_c": 14 }
+    "raw": {
+      "weather_code": 61,
+      "temperature_c": 14
+    }
   },
-
   {
     "id": "amr-aq-101",
     "type": "air_quality",
@@ -94,7 +114,10 @@
     "severity": 4,
     "source": "Open-Meteo AQ",
     "isSimulated": false,
-    "raw": { "us_aqi": 152, "pm2_5": 142 }
+    "raw": {
+      "us_aqi": 152,
+      "pm2_5": 142
+    }
   },
   {
     "id": "amr-wx-102",
@@ -106,19 +129,25 @@
     "severity": 3,
     "source": "Open-Meteo",
     "isSimulated": false,
-    "raw": { "weather_code": 0, "temperature_c": 36 }
+    "raw": {
+      "weather_code": 0,
+      "temperature_c": 36
+    }
   },
   {
     "id": "amr-tr-103",
     "type": "traffic",
     "title": "Heavy traffic on Amer Fort Road (82% congestion)",
-    "lat": 26.9820,
-    "lng": 75.8490,
+    "lat": 26.982,
+    "lng": 75.849,
     "timestamp": "2026-09-24T05:12:00Z",
     "severity": 4,
     "source": "Simulated (Amer)",
     "isSimulated": true,
-    "raw": { "congestionPct": 82, "road": "Amer Fort Road" }
+    "raw": {
+      "congestionPct": 82,
+      "road": "Amer Fort Road"
+    }
   },
   {
     "id": "amr-cr-104",
@@ -130,7 +159,10 @@
     "severity": 3,
     "source": "Simulated (Amer)",
     "isSimulated": true,
-    "raw": { "capacityPct": 78, "venue": "Amer Fort" }
+    "raw": {
+      "capacityPct": 78,
+      "venue": "Amer Fort"
+    }
   },
   {
     "id": "amr-cv-105",
@@ -142,30 +174,117 @@
     "severity": 3,
     "source": "Simulated (Amer)",
     "isSimulated": true,
-    "raw": { "category": "power", "zone": "Kunda" }
+    "raw": {
+      "category": "power",
+      "zone": "Kunda"
+    }
   },
   {
     "id": "amr-ev-106",
     "type": "event",
     "title": "Light & Sound Show at Amer Fort, 7:00 PM",
     "lat": 26.9848,
-    "lng": 75.8520,
+    "lng": 75.852,
     "timestamp": "2026-09-24T05:00:00Z",
     "severity": 1,
     "source": "Simulated (Amer)",
     "isSimulated": true,
-    "raw": { "venue": "Amer Fort", "startsAt": "19:00" }
+    "raw": {
+      "venue": "Amer Fort",
+      "startsAt": "19:00"
+    }
   },
   {
     "id": "amr-tr-107",
     "type": "traffic",
     "title": "Moderate congestion on Delhi Road, Amer",
-    "lat": 26.9700,
-    "lng": 75.8400,
+    "lat": 26.97,
+    "lng": 75.84,
     "timestamp": "2026-09-24T05:12:00Z",
     "severity": 3,
     "source": "Simulated (Amer)",
     "isSimulated": true,
-    "raw": { "congestionPct": 55, "road": "Delhi Road" }
+    "raw": {
+      "congestionPct": 55,
+      "road": "Delhi Road"
+    }
+  },
+  {
+    "id": "news-mock-flood-assam",
+    "type": "news",
+    "title": "Media mentions: flood · Assam (6 articles)",
+    "lat": 26.2006,
+    "lng": 92.9376,
+    "timestamp": "2026-09-24T05:30:00Z",
+    "severity": 2,
+    "source": "GDELT",
+    "isSimulated": false,
+    "layer": "news",
+    "tag": "MEDIA_REPORTED",
+    "sourceUrl": null,
+    "raw": {
+      "note": "Media mentions only, not a confirmed incident",
+      "topic": "flood",
+      "place": "Assam",
+      "articleCount": 6
+    }
+  },
+  {
+    "id": "news-mock-heat-rajasthan",
+    "type": "news",
+    "title": "Media mentions: heatwave · Rajasthan (3 articles)",
+    "lat": 27.0238,
+    "lng": 74.2179,
+    "timestamp": "2026-09-24T04:10:00Z",
+    "severity": 2,
+    "source": "GDELT",
+    "isSimulated": false,
+    "layer": "news",
+    "tag": "MEDIA_REPORTED",
+    "sourceUrl": null,
+    "raw": {
+      "note": "Media mentions only, not a confirmed incident",
+      "topic": "heatwave",
+      "place": "Rajasthan",
+      "articleCount": 3
+    }
+  },
+  {
+    "id": "alert-mock-odisha-flood",
+    "type": "alert",
+    "title": "Official alert: Flood · Odisha (3 active)",
+    "lat": 20.9517,
+    "lng": 85.0985,
+    "timestamp": "2026-09-24T06:00:00Z",
+    "severity": 4,
+    "source": "NDMA SACHET",
+    "isSimulated": false,
+    "layer": "alerts",
+    "tag": "REAL_LIVE",
+    "sourceUrl": null,
+    "raw": {
+      "hazard": "Flood",
+      "issuedBy": "CWC",
+      "activeAlerts": 3
+    }
+  },
+  {
+    "id": "alert-mock-rajasthan-dust",
+    "type": "alert",
+    "title": "Official alert: Thunderstorm · Rajasthan",
+    "lat": 27.0238,
+    "lng": 74.2179,
+    "timestamp": "2026-09-24T05:00:00Z",
+    "severity": 4,
+    "source": "NDMA SACHET",
+    "isSimulated": false,
+    "layer": "alerts",
+    "tag": "REAL_LIVE",
+    "sourceUrl": null,
+    "raw": {
+      "hazard": "Thunderstorm",
+      "issuedBy": "IMD Jaipur",
+      "activeAlerts": 1
+    }
   }
 ]
