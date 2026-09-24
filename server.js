@@ -35,6 +35,11 @@ app.get('/health', async (req, res, next) => {
   }
 });
 
+// feat/local and feat/globe's cache-backed pipeline (see docs/CONTRACT.md). Additive:
+// the routes above are untouched.
+app.use('/api/local', require('./routes/local'));
+app.use('/api/globe', require('./routes/globe'));
+
 app.use((req, res) => res.status(404).json({ error: 'not found' }));
 
 // eslint-disable-next-line no-unused-vars
