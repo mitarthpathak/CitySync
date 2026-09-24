@@ -17,6 +17,7 @@ app.use(cors()); // all origins: the frontend is a separate Vite dev server
 
 // GET /events?scope=global|local  (default global)
 //            &layers=news,alerts,weather  (optional; default all layers)
+//            &lat=..&lng=..  (optional, local scope only; defaults to Amer)
 // Always answered from the in-memory cache; never triggers an upstream call.
 app.get('/events', async (req, res, next) => {
   const scope = String(req.query.scope ?? 'global').toLowerCase();
@@ -31,8 +32,16 @@ app.get('/events', async (req, res, next) => {
       return res.status(400).json({ error: `unknown layer(s): ${unknown.join(', ')}. Valid: ${LAYERS.join(', ')}` });
     }
   }
+  let center = null;
+  if (scope === 'local' && req.query.lat !== undefined && req.query.lng !== undefined) {
+    const lat = Number(req.query.lat);
+    const lng = Number(req.query.lng);
+    if (Number.isFinite(lat) && Math.abs(lat) <= 90 && Number.isFinite(lng) && Math.abs(lng) <= 180) {
+      center = { lat, lng };
+    }
+  }
   try {
-    res.json(await getEvents(scope, layers));
+    res.json(await getEvents(scope, layers, center));
   } catch (err) {
     next(err);
   }

@@ -15,7 +15,7 @@ export function toneOf(severity) {
   return 'blue';
 }
 
-export const EVENT_TYPES = ['earthquake', 'weather', 'air_quality', 'traffic', 'crowd', 'civic', 'event', 'news', 'alert', 'climate', 'anomaly'];
+export const EVENT_TYPES = ['earthquake', 'weather', 'air_quality', 'traffic', 'crowd', 'civic', 'event', 'news', 'alert', 'climate', 'anomaly', 'waterlogging', 'exposure'];
 
 /** True when `value` matches the exact backend event schema. */
 export function isValidEvent(value) {
