@@ -6,6 +6,9 @@ import LandingPage from './landing/LandingPage.jsx'
 // landing page's bundle stays free of all three.
 const AppShell = lazy(() => import('./app/AppShell.jsx'))
 
+// docs/CONTRACT.md's demo harness - not linked from the app, load on demand too.
+const ContractDemo = lazy(() => import('./ContractDemo.jsx'))
+
 // Land at the top of the page after a real page change (/ -> /app). Switching between the
 // global and local views is an in-page crossfade, not a navigation, so it must NOT reset
 // scroll — that would defeat the whole "smooth morph, not a hard cut" point of it.
@@ -33,6 +36,7 @@ export default function App() {
           <Route path="/app" element={<AppShell />} />
           <Route path="/app/local" element={<AppShell />} />
           <Route path="/app/*" element={<Navigate to="/app" replace />} />
+          <Route path="/contract-demo" element={<ContractDemo />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>

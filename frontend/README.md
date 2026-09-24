@@ -80,7 +80,7 @@ One panel, used by both the globe and the map. `AppShell` owns the `selectedEven
 
 ## Shared theme (`ThemeProvider`)
 
-`src/app/ThemeProvider.jsx` holds `"light" | "dark"` in context, persisted to `localStorage` (`cp.theme`), defaulting to `prefers-color-scheme`. An inline script in `index.html` sets the `dark` class on `<html>` before React (or any CSS) paints, so there's no flash of the wrong theme on load. `useTheme.js` is now a thin `{ dark, toggle }` wrapper over that context, kept so existing consumers (`ThemeButton`, `GlobeView`) didn't need to change. The toggle in the header and the floating button both read/write the same state, and it propagates to the globe (`data-theme`) and the map (tile URLs) without either prop-drilling through the other.
+`src/app/ThemeProvider.jsx` holds `"light" | "dark"` in context. Deliberately not persisted (no `localStorage`, no `prefers-color-scheme` fallback) - every fresh load's first impression is light, regardless of the OS/browser preference or an earlier session's choice; dark only lasts as long as someone has actually clicked the toggle this session. `useTheme.js` is now a thin `{ dark, toggle }` wrapper over that context, kept so existing consumers (`ThemeButton`, `GlobeView`) didn't need to change. The toggle in the header and the floating button both read/write the same state, and it propagates to the globe (`data-theme`) and the map (tile URLs) without either prop-drilling through the other.
 
 The landing page's own theme toggle is untouched and still works standalone (it manipulates the same `dark` class directly, independent of this context).
 

@@ -84,18 +84,21 @@ body.cp-body {
   border: 1px solid var(--cp-line); background: var(--cp-card); color: var(--cp-fg); cursor: pointer;
 }
 .cp-iconbtn svg { width: 15px; height: 15px; }
-.cp-float-theme { position: fixed; right: 25px; bottom: 22px; z-index: 30; width: 34px; height: 34px; }
+/* bottom clears the fixed .cp-feedrow (70px incl. border) + the same 22px gap it
+   used to have to the viewport edge - stays clear of it on Global, and is just a
+   little higher than before on Local, where there's no feed bar to clash with. */
+.cp-float-theme { position: fixed; right: 25px; bottom: 92px; z-index: 30; width: 34px; height: 34px; }
 
 /* ---- shared type / atoms ------------------------------------------------ */
-.cp-container { width: min(1380px, calc(100% - 68px)); margin: 0 auto; }
+.cp-container { width: min(1600px, calc(100% - 68px)); margin: 0 auto; }
 .cp-eyebrow, .cp-label {
   margin: 0; font-size: 10px; line-height: 12px; letter-spacing: 1.3px; text-transform: uppercase; color: var(--cp-muted);
 }
 .cp-eyebrow { margin-bottom: 21px; }
 .cp-h1 { margin: 0; font-size: 52px; line-height: 1; letter-spacing: -0.06em; font-weight: 400; }
 
-.cp-hero { display: flex; justify-content: space-between; min-height: 169px; padding: 49px 0 23px; }
-.cp-hero--local { min-height: 171px; padding-bottom: 24px; }
+.cp-hero { display: flex; justify-content: space-between; min-height: 145px; padding: 25px 0 23px; }
+.cp-hero--local { min-height: 147px; padding-bottom: 24px; }
 .cp-updating { align-self: flex-end; display: inline-flex; align-items: center; gap: 8px; margin: 0; font-size: 11px; line-height: 16px; color: var(--cp-muted); }
 .cp-updating svg { width: 12px; height: 12px; }
 
@@ -105,7 +108,17 @@ body.cp-body {
 .cp-dot--high, .cp-dot--crimson { background: var(--cp-crimson); }
 
 /* ---- global view -------------------------------------------------------- */
-.cp-globe-grid { display: grid; grid-template-columns: 180px minmax(0, 1fr) 180px; height: 534px; border-top: 1px solid var(--cp-line); }
+/* Rendered as a sibling of .cp-container in GlobalView.jsx, not nested inside it, so
+   it's full-width by default (100vw + negative margin would also work, but is 1-
+   -2px off whenever a scrollbar is present - true layout width isn't). */
+.cp-globe-grid {
+  display: grid; grid-template-columns: 180px minmax(0, 1fr) 180px; height: 710px;
+  border-top: 1px solid var(--cp-line);
+  /* box-sizing: border-box (globals.css) means this trailing padding eats into the
+     710px above rather than adding to it, netting a 620px visible globe/rail area
+     plus 90px of clearance for the fixed live-feed footer below. */
+  padding-bottom: 90px;
+}
 .cp-rail { padding-top: 35px; }
 .cp-rail-left { border-right: 1px solid var(--cp-line); }
 .cp-rail-right { border-left: 1px solid var(--cp-line); padding-left: 28px; }
@@ -126,8 +139,8 @@ body.cp-body {
 .cp-globe-panel { position: relative; min-width: 0; }
 .cp-globe-panel > .gv-root { position: absolute; inset: 0; }
 .cp-coord { position: absolute; font-size: 9px; letter-spacing: 0.1em; color: var(--cp-muted); pointer-events: none; }
-.cp-coord-n { left: 22%; top: 129px; }
-.cp-coord-e { left: 82.4%; top: 375px; }
+.cp-coord-n { left: 22%; top: 24.2%; }
+.cp-coord-e { left: 82.4%; top: 70.2%; }
 
 .cp-stat { display: flex; align-items: baseline; gap: 4px; margin: 27px 0 0; font-size: 30px; line-height: 30px; }
 .cp-stat strong { font-weight: 400; letter-spacing: -0.06em; }
@@ -138,7 +151,14 @@ body.cp-body {
 .cp-label-coverage { margin-top: 84px; }
 .cp-substat { margin: 15px 0 0; font-size: 11px; line-height: 16.5px; color: var(--cp-muted); }
 
-.cp-feedrow { display: flex; align-items: center; gap: 18px; height: 69px; overflow: hidden; border-top: 1px solid var(--cp-line); border-bottom: 1px solid var(--cp-line); }
+/* Rendered as a sibling of .cp-view-stack (see AppShell.jsx), not inside it - a
+   transform-animated ancestor there would otherwise become this element's
+   containing block and break true viewport-fixed positioning. */
+.cp-feedrow {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 25;
+  display: flex; align-items: center; gap: 18px; height: 69px; overflow: hidden;
+  padding: 0 34px; background: var(--cp-bg); border-top: 1px solid var(--cp-line);
+}
 .cp-feed-label { display: inline-flex; flex: none; align-items: center; gap: 8px; font-size: 9px; letter-spacing: 1.1px; text-transform: uppercase; color: var(--cp-muted); }
 .cp-feed-label i { display: block; width: 5px; height: 5px; border-radius: 50%; background: var(--cp-crimson); }
 .cp-feed { display: flex; gap: 34px; min-width: 0; margin: 0; padding: 0; list-style: none; }
@@ -418,11 +438,13 @@ body.cp-body {
   .cp-status { display: none; }
   .cp-container { width: calc(100% - 32px); }
   .cp-h1 { font-size: 40px; }
-  .cp-globe-grid { grid-template-columns: 1fr; height: auto; }
+  /* The fixed footer is a desktop-only treatment; keep the original in-flow mobile layout. */
+  .cp-globe-grid { grid-template-columns: 1fr; height: auto; padding-bottom: 0; }
   .cp-rail { padding: 20px 0; }
   .cp-rail-left, .cp-rail-right { border: 0; padding-left: 0; }
   .cp-globe-panel { height: 420px; }
-  .cp-feedrow { height: auto; flex-wrap: wrap; padding: 16px 0; }
+  .cp-feedrow { position: static; height: auto; flex-wrap: wrap; padding: 16px 0; background: none; }
+  .cp-float-theme { bottom: 22px; }
   .cp-feed { flex-wrap: wrap; gap: 12px 24px; }
   .cp-ticker { mask-image: none; }
   .cp-ticker-track { width: auto; animation: none; }

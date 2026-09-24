@@ -76,6 +76,12 @@ export default function AppShell() {
 
       <EventPanel event={selectedEvent} onClose={() => setSelectedEvent(null)} />
       <ThemeButton className="cp-float-theme" />
+
+      {/* A sibling of .cp-view-stack, not inside it: GlobalView's layer is
+          transform-animated by framer-motion, and a transformed ancestor would
+          become this element's containing block and break position:fixed. GlobalView
+          portals its live-feed ticker into this slot whenever it's the active view. */}
+      <div id="cp-feedrow-slot" />
     </div>
   )
 }

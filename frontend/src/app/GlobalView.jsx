@@ -1,4 +1,5 @@
 import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { ChevronRight, Radio } from 'lucide-react'
 import { useEvents, useHealth } from './useEvents.js'
 import { LAYERS, LAYER_BY_ID, LAYER_IDS, TAGS, layerOf, layerStatuses, tagOf } from '../lib/layers.js'
@@ -87,16 +88,28 @@ export default function GlobalView({ active = true, onSelectEvent }) {
     onSelectEvent?.(event)
   }, [onSelectEvent])
 
-  return (
-    <div className="cp-container">
-      <section className="cp-hero">
-        <div>
-          <p className="cp-eyebrow">Live overview / World</p>
-          <h1 className="cp-h1">The world, in pulse.</h1>
-        </div>
-        <p className="cp-updating"><Radio />Updating continuously</p>
-      </section>
+  // The ticker renders as a fixed footer (see app.css's .cp-feedrow), but this
+  // component sits inside .cp-view-stack's framer-motion-animated layer - any
+  // active transform on an ancestor becomes the containing block for
+  // position:fixed descendants, which would trap it instead of the viewport. A
+  // portal into the unanimated slot AppShell renders keeps position:fixed honest.
+  const [feedSlot, setFeedSlot] = useState(null)
+  useEffect(() => { setFeedSlot(document.getElementById('cp-feedrow-slot')) }, [])
 
+  return (
+    <>
+      <div className="cp-container">
+        <section className="cp-hero">
+          <div>
+            <p className="cp-eyebrow">Live overview / World</p>
+            <h1 className="cp-h1">The world, in pulse.</h1>
+          </div>
+          <p className="cp-updating"><Radio />Updating continuously</p>
+        </section>
+      </div>
+
+      {/* Deliberately NOT inside .cp-container: it needs to span the full viewport
+          width so the rails sit flush against its true edges (see app.css). */}
       <section className="cp-globe-grid" aria-label="Global overview">
         <aside className="cp-rail cp-rail-left">
           <p className="cp-label">Layers</p>
@@ -182,37 +195,40 @@ export default function GlobalView({ active = true, onSelectEvent }) {
         </aside>
       </section>
 
-      <section className="cp-feedrow" aria-label="Live feed">
-        <span className="cp-feed-label"><i />Live feed</span>
-        <div className="cp-ticker">
-          {ticker.length === 0 ? (
-            <p className="cp-ticker-empty">{loading ? 'Loading events…' : 'No events on the enabled layers.'}</p>
-          ) : (
-            // Rendered twice for a seamless marquee loop; the copy is hidden from assistive tech.
-            <div className="cp-ticker-track">
-              {[0, 1].map((copy) => (
-                <ul key={copy} className="cp-feed" aria-hidden={copy === 1 || undefined}>
-                  {ticker.map((e) => {
-                    const badge = TAGS[tagOf(e)].badge
-                    return (
-                      <li key={e.id}>
-                        <button type="button" className="cp-feed-item" onClick={() => selectFromTicker(e)} tabIndex={copy === 1 ? -1 : undefined}>
-                          <i className="cp-dot" style={{ background: SEVERITY_COLORS[e.severity] }} />
-                          <em className="cp-feed-layer">{LAYER_BY_ID[layerOf(e)]?.label}</em>
-                          <strong>{e.title}</strong>
-                          {badge && <b className="cp-feed-badge" data-tag={tagOf(e)}>{badge}</b>}
-                          <small>{formatAgo(e.timestamp)}</small>
-                          <ChevronRight />
-                        </button>
-                      </li>
-                    )
-                  })}
-                </ul>
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
-    </div>
+      {active && feedSlot && createPortal(
+        <section className="cp-feedrow" aria-label="Live feed">
+          <span className="cp-feed-label"><i />Live feed</span>
+          <div className="cp-ticker">
+            {ticker.length === 0 ? (
+              <p className="cp-ticker-empty">{loading ? 'Loading events…' : 'No events on the enabled layers.'}</p>
+            ) : (
+              // Rendered twice for a seamless marquee loop; the copy is hidden from assistive tech.
+              <div className="cp-ticker-track">
+                {[0, 1].map((copy) => (
+                  <ul key={copy} className="cp-feed" aria-hidden={copy === 1 || undefined}>
+                    {ticker.map((e) => {
+                      const badge = TAGS[tagOf(e)].badge
+                      return (
+                        <li key={e.id}>
+                          <button type="button" className="cp-feed-item" onClick={() => selectFromTicker(e)} tabIndex={copy === 1 ? -1 : undefined}>
+                            <i className="cp-dot" style={{ background: SEVERITY_COLORS[e.severity] }} />
+                            <em className="cp-feed-layer">{LAYER_BY_ID[layerOf(e)]?.label}</em>
+                            <strong>{e.title}</strong>
+                            {badge && <b className="cp-feed-badge" data-tag={tagOf(e)}>{badge}</b>}
+                            <small>{formatAgo(e.timestamp)}</small>
+                            <ChevronRight />
+                          </button>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>,
+        feedSlot,
+      )}
+    </>
   )
 }
