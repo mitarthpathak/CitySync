@@ -1,4 +1,4 @@
-# CityPulse frontend
+# CitySync frontend
 
 Vite + React (plain JavaScript) app.
 
@@ -43,7 +43,7 @@ It fills its parent, so give the parent a size. `GlobalView.jsx` puts it in the 
 - **Modes:** a Normal / Satellite toggle (top right) swaps `globeImageUrl` and `bumpImageUrl` between the local textures in `public/textures/` (`earth-day.jpg`, `earth-blue-marble.jpg`, `earth-topology.png`). Nothing is loaded from a CDN. The choice is remembered.
 - **Points:** coloured by severity (1 slate, 2 green, 3 amber, 4 orange, 5 red; see `src/lib/severity.js`), taller and wider as severity rises. Events at severity 4 and above also get a pulsing ring. Hovering shows title, source and a **SIMULATED** tag when `isSimulated` is true (titles are HTML-escaped, since they come from third-party feeds).
 - **Performance:** at most 500 points (most severe, then newest) and 24 rings. Unchanged events keep their object identity between polls, so a refresh only adds or removes the meshes that really changed. The WebGL context is released on unmount.
-- **Motion:** gentle auto-rotate that pauses while you drag or zoom and resumes after 4 s. With `prefers-reduced-motion` there is no auto-rotate, no rings and no fly-to animation.
+- **Motion:** the globe spins gently once on load; dragging, zooming, or clicking it (even the background) stops that spin for good — it never resumes on its own. With `prefers-reduced-motion` there is no auto-rotate, no rings and no fly-to animation.
 - **No WebGL:** the globe shows a short message instead of crashing the page.
 
 The globe (react-globe.gl and three.js, about 2 MB) is its own lazy chunk that only mounts when the Global view actually renders; `AppShell` itself is also lazy, so the landing page's bundle is free of it, Leaflet and Framer Motion entirely.

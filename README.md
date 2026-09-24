@@ -1,4 +1,4 @@
-# CityPulse backend
+# CitySync backend
 
 Node.js + Express (plain JavaScript, CommonJS) API that fuses several civic data feeds into one normalized event stream, with a global vs local (Amer, Jaipur) geo-filter. No API keys, no accounts.
 

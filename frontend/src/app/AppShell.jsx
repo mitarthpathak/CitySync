@@ -29,7 +29,7 @@ export default function AppShell() {
   // The app has its own palette; scope it to <body> while this screen is mounted.
   useEffect(() => {
     const previousTitle = document.title
-    document.title = 'CityPulse: Live overview'
+    document.title = 'CitySync: Live overview'
     document.body.classList.add('cp-body')
     return () => {
       document.title = previousTitle

@@ -1,7 +1,7 @@
 {
-  "name": "citypulse-backend",
+  "name": "citysync-backend",
   "version": "1.0.0",
-  "description": "CityPulse: fuses live civic data feeds into one normalized event stream with a global/local (Amer, Jaipur) geo-filter.",
+  "description": "CitySync: fuses live civic data feeds into one normalized event stream with a global/local (Amer, Jaipur) geo-filter.",
   "main": "server.js",
   "private": true,
   "scripts": {

@@ -1,5 +1,5 @@
 /* ============================================================================
-   CityPulse app screens (/app, /app/local)
+   CitySync app screens (/app, /app/local)
    Scoped under body.cp-body so the landing page styles in globals.css are untouched.
    ========================================================================== */
 
@@ -60,8 +60,7 @@ body.cp-body {
   border-bottom: 1px solid var(--cp-line);
 }
 .cp-logo { display: inline-flex; align-items: center; gap: 10px; padding-right: 4px; font-size: 15px; font-weight: 700; letter-spacing: -0.04em; color: var(--cp-fg); }
-.cp-logo-mark { display: grid; place-items: center; width: 20px; height: 20px; border: 1.5px solid var(--cp-fg); border-radius: 50%; }
-.cp-logo-mark i { display: block; width: 6px; height: 6px; border-radius: 50%; background: var(--cp-blue); }
+.cp-logo-mark { display: block; flex: none; width: 29px; height: 20px; color: var(--cp-fg); }
 
 .cp-viewtoggle { display: flex; gap: 4px; padding: 3px; border: 1px solid var(--cp-line); border-radius: 6px; background: var(--cp-surface); }
 .cp-viewtoggle a {

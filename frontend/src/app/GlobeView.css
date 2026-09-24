@@ -115,6 +115,24 @@
   letter-spacing: 0.1em;
 }
 
+/* ---- tile attribution (only shown once the tile engine is actually active) ----- */
+.gv-tile-credit {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  z-index: 2;
+  margin: 0;
+  padding: 4px 8px;
+  border: 1px solid var(--gv-line);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--gv-card) 80%, transparent);
+  backdrop-filter: blur(6px);
+  font-size: 9px;
+  line-height: 11px;
+  color: var(--gv-muted);
+  pointer-events: none;
+}
+
 /* ---- no WebGL --------------------------------------------------------------------- */
 .gv-unavailable {
   position: absolute;

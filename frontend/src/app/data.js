@@ -1,5 +1,5 @@
 // Demo content for the live-overview screens. Everything here is static placeholder data
-// (it mirrors the design mock-ups); wire it to the CityPulse API (`GET /events`) when ready.
+// (it mirrors the design mock-ups); wire it to the CitySync API (`GET /events`) when ready.
 
 export const signals = {
   index: 72,

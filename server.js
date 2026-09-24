@@ -50,7 +50,7 @@ process.on('unhandledRejection', (reason) => {
 
 if (require.main === module) {
   const server = app.listen(config.port, () => {
-    console.log(`CityPulse API listening on http://localhost:${config.port}`);
+    console.log(`CitySync API listening on http://localhost:${config.port}`);
     console.log(
       config.useMock
         ? '[mode] USE_MOCK=true - serving events.json only, no network calls'
