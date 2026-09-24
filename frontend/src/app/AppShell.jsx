@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
+import { ChevronRight } from 'lucide-react'
 import Header from './Header.jsx'
 import ThemeButton from './ThemeButton.jsx'
 import GlobalView from './GlobalView.jsx'
 import LocalView from './LocalView.jsx'
 import EventPanel from './EventPanel.jsx'
+import { liveFeed } from './data.js'
 import { useSelectedLocation } from './useSelectedLocation.js'
 import { useReducedMotion } from '../lib/useReducedMotion.js'
 
@@ -76,6 +78,27 @@ export default function AppShell() {
 
       <EventPanel event={selectedEvent} onClose={() => setSelectedEvent(null)} />
       <ThemeButton className="cp-float-theme" />
+
+      {/* A sibling of .cp-view-stack, not inside it: GlobalView's layer is
+          transform-animated by framer-motion, and a transformed ancestor would
+          become this element's containing block and break position:fixed. */}
+      {view === 'global' && (
+        <section className="cp-feedrow" aria-label="Live feed">
+          <span className="cp-feed-label"><i />Live feed</span>
+          <ul className="cp-feed">
+            {liveFeed.map(({ place, text, ago }) => (
+              <li key={place}>
+                <button type="button" className="cp-feed-item">
+                  <strong>{place}</strong>
+                  <span>{text}</span>
+                  <small>{ago}</small>
+                  <ChevronRight />
+                </button>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
     </div>
   )
 }

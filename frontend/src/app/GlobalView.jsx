@@ -1,6 +1,6 @@
 import { lazy, Suspense, useState } from 'react'
-import { AirVent, ArrowUp, Bell, ChevronRight, CloudRain, Radio, Waves } from 'lucide-react'
-import { liveFeed, severity, signals } from './data.js'
+import { AirVent, ArrowUp, Bell, CloudRain, Radio, Waves } from 'lucide-react'
+import { severity, signals } from './data.js'
 
 // The globe (react-globe.gl + three.js) is big and only this screen needs it, so it loads on demand.
 const GlobeView = lazy(() => import('./GlobeView.jsx'))
@@ -17,15 +17,19 @@ export default function GlobalView({ active = true, onSelectEvent }) {
   const toggleLayer = (id) => setLayers((current) => ({ ...current, [id]: !current[id] }))
 
   return (
-    <div className="cp-container">
-      <section className="cp-hero">
-        <div>
-          <p className="cp-eyebrow">Live overview / World</p>
-          <h1 className="cp-h1">The world, in pulse.</h1>
-        </div>
-        <p className="cp-updating"><Radio />Updating continuously</p>
-      </section>
+    <>
+      <div className="cp-container">
+        <section className="cp-hero">
+          <div>
+            <p className="cp-eyebrow">Live overview / World</p>
+            <h1 className="cp-h1">The world, in pulse.</h1>
+          </div>
+          <p className="cp-updating"><Radio />Updating continuously</p>
+        </section>
+      </div>
 
+      {/* Deliberately NOT inside .cp-container: it needs to span the full viewport
+          width so the rails sit flush against its true edges (see app.css). */}
       <section className="cp-globe-grid" aria-label="Global overview">
         <aside className="cp-rail cp-rail-left">
           <p className="cp-label">Layers</p>
@@ -76,22 +80,6 @@ export default function GlobalView({ active = true, onSelectEvent }) {
           <p className="cp-substat">Across {signals.countries} countries</p>
         </aside>
       </section>
-
-      <section className="cp-feedrow" aria-label="Live feed">
-        <span className="cp-feed-label"><i />Live feed</span>
-        <ul className="cp-feed">
-          {liveFeed.map(({ place, text, ago }) => (
-            <li key={place}>
-              <button type="button" className="cp-feed-item">
-                <strong>{place}</strong>
-                <span>{text}</span>
-                <small>{ago}</small>
-                <ChevronRight />
-              </button>
-            </li>
-          ))}
-        </ul>
-      </section>
-    </div>
+    </>
   )
 }
