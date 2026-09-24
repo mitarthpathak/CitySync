@@ -1,0 +1,5 @@
+'use strict';
+const { fetchJson } = require('../lib/http'); const { makeEvent } = require('../lib/event'); const { AMER } = require('../lib/geo');
+const QUERIES=['Jaipur waterlogging','Jaipur traffic jam','Jaipur power cut','Jaipur flood','Amer Jaipur','Rajasthan weather'];
+async function fetchGdelt() { const query=encodeURIComponent(QUERIES.map((q)=>`"${q}"`).join(' OR ')); const data=await fetchJson(`https://api.gdeltproject.org/api/v2/doc/doc?query=${query}&mode=artlist&format=json&maxrecords=50`); return (data.articles||[]).map((a,i)=>makeEvent({id:`gdelt-${Buffer.from(a.url||String(i)).toString('base64url')}`,type:'news',layer:'news',tag:'MEDIA_REPORTED',sourceUrl:a.url||null,title:`Media mention: ${a.title||'Jaipur signal'}`,lat:AMER.lat,lng:AMER.lng,timestamp:a.seendate?new Date(a.seendate).toISOString():new Date().toISOString(),severity:Math.min(3,Math.max(1,Number(a.socialimage?2:1))),source:'GDELT',raw:{domain:a.domain||null,language:a.language||null,disclaimer:'Media mention, not a confirmed incident.'}})); }
+module.exports={fetchGdelt};

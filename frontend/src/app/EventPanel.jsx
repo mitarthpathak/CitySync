@@ -39,6 +39,12 @@ function RawFields({ raw }) {
   )
 }
 
+function ScoreBars({ raw }) {
+  const scores = [['Hazard', raw?.hazard_score], ['Exposure', raw?.exposure_score], ['Impact', raw?.impact], ['Confidence', raw?.confidence_score]]
+  if (!scores.some(([, value]) => Number.isFinite(value))) return null
+  return <div className="cp-score-bars">{scores.map(([label, value]) => <div key={label}><span>{label} <b>{Math.min(100, Math.round(value || 0))}</b></span><i><em style={{ width: `${Math.min(100, Math.max(0, value || 0))}%` }} /></i></div>)}</div>
+}
+
 /**
  * Shared slide-in detail panel for both the global and local views.
  *
@@ -131,12 +137,13 @@ export default function EventPanel({ event, onClose }) {
                 <i />Severity {event.severity} · {nameOf(event.severity)}
               </span>
               {event.isSimulated && <span className="cp-chip-sim">SIMULATED</span>}
+              {event.tag && <span className="cp-chip-sim">{event.tag}</span>}
             </div>
 
             <dl className="cp-panel-meta">
               <div>
                 <dt>Source</dt>
-                <dd>{event.source}</dd>
+                <dd>{event.source} {event.sourceUrl && <a href={event.sourceUrl} target="_blank" rel="noreferrer" className="cp-panel-maplink">Evidence <ExternalLink /></a>}</dd>
               </div>
               <div>
                 <dt>When</dt>
@@ -159,6 +166,7 @@ export default function EventPanel({ event, onClose }) {
             </dl>
 
             <p className="cp-label cp-panel-rawlabel">Details</p>
+            <ScoreBars raw={event.raw} />
             <RawFields raw={event.raw} />
           </motion.div>
         </div>

@@ -38,6 +38,7 @@ async function generateAmerEvents() {
     makeEvent({
       id: `sim-${type}-${stamp}-${Math.random().toString(36).slice(2, 8)}`,
       type,
+      layer: type,
       title,
       ...scatterAround(AMER, radiusKm),
       timestamp: now.toISOString(),

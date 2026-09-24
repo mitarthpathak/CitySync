@@ -2,10 +2,12 @@
 
 const express = require('express');
 const cors = require('cors');
+const { spawn } = require('child_process');
 const config = require('./lib/config');
 const { getEvents, getSnapshot } = require('./lib/normalize');
 const { loadMockEvents, MOCK_PATH } = require('./lib/mock');
 const { AMER, LOCAL_RADIUS_KM } = require('./lib/geo');
+const { wards, getWard } = require('./lib/wards');
 
 const SCOPES = ['global', 'local'];
 
@@ -34,6 +36,8 @@ app.get('/health', async (req, res, next) => {
     next(err);
   }
 });
+app.get('/api/wards', (req, res) => res.json(wards));
+app.get('/api/wards/:id', (req, res) => { const ward = getWard(req.params.id); return ward ? res.json(ward) : res.status(404).json({ error: 'ward not found' }); });
 
 app.use((req, res) => res.status(404).json({ error: 'not found' }));
 
@@ -57,8 +61,13 @@ if (require.main === module) {
         : `[mode] live feeds (USGS, Open-Meteo, Open-Meteo AQ) + simulated Amer feed; local scope = ${LOCAL_RADIUS_KM} km around ${AMER.lat}, ${AMER.lng}`,
     );
     loadMockEvents().then((mock) => console.log(`[mock] ${MOCK_PATH} - ${mock.length} valid event(s)`));
+    // Populate the slow Overpass snapshot asynchronously on startup; routes only read its file.
+    const exposureBuild = spawn(process.execPath, ['scripts/fetch-exposure.js'], { cwd: __dirname, stdio: 'ignore', windowsHide: true });
+    exposureBuild.unref();
     // Warm the cache and print the live/mock status of each feed right at startup.
     getSnapshot().catch((err) => console.error('[server] warm-up failed:', err));
+    // Upstream feeds are warmed/refreshed here; browser reads only this server cache.
+    setInterval(() => getSnapshot().catch(() => {}), config.backgroundRefreshMs).unref();
   });
   server.on('error', (err) => {
     console.error(

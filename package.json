@@ -7,7 +7,10 @@
   "scripts": {
     "start": "node server.js",
     "start:mock": "node server.js --mock",
-    "dev": "node --watch server.js"
+    "dev": "node --watch server.js",
+    "build:wards": "node scripts/convert-wards.js",
+    "build:exposure": "node scripts/fetch-exposure.js",
+    "build:places": "node scripts/geocode-hotspots.js"
   },
   "engines": {
     "node": ">=18"
