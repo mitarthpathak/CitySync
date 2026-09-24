@@ -97,8 +97,8 @@ body.cp-body {
 .cp-eyebrow { margin-bottom: 21px; }
 .cp-h1 { margin: 0; font-size: 52px; line-height: 1; letter-spacing: -0.06em; font-weight: 400; }
 
-.cp-hero { display: flex; justify-content: space-between; min-height: 145px; padding: 25px 0 23px; }
-.cp-hero--local { min-height: 147px; padding-bottom: 24px; }
+.cp-hero { display: flex; justify-content: space-between; min-height: 110px; padding: 12px 0 14px; }
+.cp-hero--local { min-height: 112px; padding-bottom: 15px; }
 .cp-updating { align-self: flex-end; display: inline-flex; align-items: center; gap: 8px; margin: 0; font-size: 11px; line-height: 16px; color: var(--cp-muted); }
 .cp-updating svg { width: 12px; height: 12px; }
 
@@ -111,13 +111,15 @@ body.cp-body {
 /* Rendered as a sibling of .cp-container in GlobalView.jsx, not nested inside it, so
    it's full-width by default (100vw + negative margin would also work, but is 1-
    -2px off whenever a scrollbar is present - true layout width isn't). */
+/* Fills exactly what's left below the header+hero down to the fixed footer's top
+   edge - no leftover dead strip above the footer, no fixed px height that leaves a
+   gap on a taller screen and a scrollbar on a shorter one. The 282px below is
+   measured (header+hero+footer height), not guessed - see the PR/commit note if
+   the header or hero's own height ever changes and this needs re-measuring. */
 .cp-globe-grid {
-  display: grid; grid-template-columns: 180px minmax(0, 1fr) 180px; height: 710px;
+  display: grid; grid-template-columns: 180px minmax(0, 1fr) 180px; height: calc(100vh - 248px);
+  min-height: 460px;
   border-top: 1px solid var(--cp-line);
-  /* box-sizing: border-box (globals.css) means this trailing padding eats into the
-     710px above rather than adding to it, netting a 620px visible globe/rail area
-     plus 90px of clearance for the fixed live-feed footer below. */
-  padding-bottom: 90px;
 }
 .cp-rail { padding-top: 35px; }
 .cp-rail-left { border-right: 1px solid var(--cp-line); }
@@ -439,7 +441,7 @@ body.cp-body {
   .cp-container { width: calc(100% - 32px); }
   .cp-h1 { font-size: 40px; }
   /* The fixed footer is a desktop-only treatment; keep the original in-flow mobile layout. */
-  .cp-globe-grid { grid-template-columns: 1fr; height: auto; padding-bottom: 0; }
+  .cp-globe-grid { grid-template-columns: 1fr; height: auto; min-height: 0; }
   .cp-rail { padding: 20px 0; }
   .cp-rail-left, .cp-rail-right { border: 0; padding-left: 0; }
   .cp-globe-panel { height: 420px; }
