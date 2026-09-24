@@ -1,0 +1,21 @@
+{
+  "name": "citypulse-backend",
+  "version": "1.0.0",
+  "description": "CityPulse: fuses live civic data feeds into one normalized event stream with a global/local (Amer, Jaipur) geo-filter.",
+  "main": "server.js",
+  "private": true,
+  "scripts": {
+    "start": "node server.js",
+    "start:mock": "node server.js --mock",
+    "dev": "node --watch server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.3",
+    "express": "^5.2.1"
+  }
+}
