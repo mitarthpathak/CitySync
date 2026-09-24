@@ -15,16 +15,8 @@
     <link rel="apple-touch-icon" href="/apple-icon.png" />
   </head>
   <body class="antialiased">
-    <!-- Sets the `dark` class before React (and any CSS) paints, so there is no flash of
-         the wrong theme. Must stay in sync with THEME_KEY in src/app/ThemeProvider.jsx. -->
-    <script>
-      (function () {
-        try {
-          var k = 'cp.theme', s = localStorage.getItem(k), d = s === 'dark';
-          document.documentElement.classList.toggle('dark', d);
-        } catch (e) {}
-      })();
-    </script>
+    <!-- Every fresh load is light by default (no persisted/system-preference dark), so
+         there is nothing to set before React paints - see src/app/ThemeProvider.jsx. -->
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
