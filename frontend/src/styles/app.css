@@ -87,15 +87,15 @@ body.cp-body {
 .cp-float-theme { position: fixed; right: 25px; bottom: 22px; z-index: 30; width: 34px; height: 34px; }
 
 /* ---- shared type / atoms ------------------------------------------------ */
-.cp-container { width: min(1380px, calc(100% - 68px)); margin: 0 auto; }
+.cp-container { width: min(1600px, calc(100% - 68px)); margin: 0 auto; }
 .cp-eyebrow, .cp-label {
   margin: 0; font-size: 10px; line-height: 12px; letter-spacing: 1.3px; text-transform: uppercase; color: var(--cp-muted);
 }
 .cp-eyebrow { margin-bottom: 21px; }
 .cp-h1 { margin: 0; font-size: 52px; line-height: 1; letter-spacing: -0.06em; font-weight: 400; }
 
-.cp-hero { display: flex; justify-content: space-between; min-height: 169px; padding: 49px 0 23px; }
-.cp-hero--local { min-height: 171px; padding-bottom: 24px; }
+.cp-hero { display: flex; justify-content: space-between; min-height: 145px; padding: 25px 0 23px; }
+.cp-hero--local { min-height: 147px; padding-bottom: 24px; }
 .cp-updating { align-self: flex-end; display: inline-flex; align-items: center; gap: 8px; margin: 0; font-size: 11px; line-height: 16px; color: var(--cp-muted); }
 .cp-updating svg { width: 12px; height: 12px; }
 
@@ -105,7 +105,7 @@ body.cp-body {
 .cp-dot--high, .cp-dot--crimson { background: var(--cp-crimson); }
 
 /* ---- global view -------------------------------------------------------- */
-.cp-globe-grid { display: grid; grid-template-columns: 180px minmax(0, 1fr) 180px; height: 534px; border-top: 1px solid var(--cp-line); }
+.cp-globe-grid { display: grid; grid-template-columns: 180px minmax(0, 1fr) 180px; height: 620px; border-top: 1px solid var(--cp-line); }
 .cp-rail { padding-top: 35px; }
 .cp-rail-left { border-right: 1px solid var(--cp-line); }
 .cp-rail-right { border-left: 1px solid var(--cp-line); padding-left: 28px; }
@@ -126,8 +126,8 @@ body.cp-body {
 .cp-globe-panel { position: relative; min-width: 0; }
 .cp-globe-panel > .gv-root { position: absolute; inset: 0; }
 .cp-coord { position: absolute; font-size: 9px; letter-spacing: 0.1em; color: var(--cp-muted); pointer-events: none; }
-.cp-coord-n { left: 22%; top: 129px; }
-.cp-coord-e { left: 82.4%; top: 375px; }
+.cp-coord-n { left: 22%; top: 24.2%; }
+.cp-coord-e { left: 82.4%; top: 70.2%; }
 
 .cp-stat { display: flex; align-items: baseline; gap: 4px; margin: 27px 0 0; font-size: 30px; line-height: 30px; }
 .cp-stat strong { font-weight: 400; letter-spacing: -0.06em; }
