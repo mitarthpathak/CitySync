@@ -1,23 +1,21 @@
 import { Link, NavLink } from 'react-router-dom'
 import { MapPin } from 'lucide-react'
 import ThemeButton from './ThemeButton.jsx'
-import { useUtcClock } from './useUtcClock.js'
-import { EVENTS_LIVE } from './data.js'
+import { useHealth } from './useEvents.js'
 
-function GlobalStatus() {
-  const clock = useUtcClock()
+function HealthStatus() {
+  const { status, mode, count, error } = useHealth()
+  const known = status === 'ok'
+  const label = !known ? 'Reconnecting…' : mode === 'mock' ? `${count ?? 0} events (mock)` : `${count ?? 0} events live`
   return (
-    <>
-      <span className="cp-status">
-        <span className="cp-live" aria-hidden="true"><i /></span>
-        {EVENTS_LIVE} events live
-      </span>
-      <span className="cp-clock">{clock}</span>
-    </>
+    <span className="cp-status" data-state={!known ? 'offline' : mode === 'mock' ? 'mock' : 'live'} title={error || undefined}>
+      <span className="cp-live" aria-hidden="true"><i /></span>
+      {label}
+    </span>
   )
 }
 
-export default function Header({ view }) {
+export default function Header({ view, location }) {
   const tab = ({ isActive }) => (isActive ? 'is-active' : undefined)
   return (
     <header className="cp-header">
@@ -27,15 +25,14 @@ export default function Header({ view }) {
       </Link>
 
       <nav className="cp-viewtoggle" aria-label="View">
-        <NavLink to="/app" end className={tab}>Global</NavLink>
-        <NavLink to="/app/local" className={tab}>Local <small>Amer</small></NavLink>
+        <NavLink to="/app" end className={tab}><span aria-hidden="true">{'\u{1F30D}'}</span> Global</NavLink>
+        <NavLink to="/app/local" className={tab}><span aria-hidden="true">{'\u{1F4CD}'}</span> Local</NavLink>
       </nav>
 
       <div className="cp-header-right">
-        {view === 'local' ? (
-          <span className="cp-place"><MapPin />Amer, Jaipur</span>
-        ) : (
-          <GlobalStatus />
+        <HealthStatus />
+        {view === 'local' && location && (
+          <span className="cp-place"><MapPin />{location.label}</span>
         )}
         <ThemeButton />
       </div>

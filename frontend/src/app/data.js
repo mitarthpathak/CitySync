@@ -1,8 +1,6 @@
 // Demo content for the live-overview screens. Everything here is static placeholder data
 // (it mirrors the design mock-ups); wire it to the CityPulse API (`GET /events`) when ready.
 
-export const EVENTS_LIVE = 24
-
 export const signals = {
   index: 72,
   delta: '4.2% since 12:00',

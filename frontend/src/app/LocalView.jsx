@@ -1,23 +1,29 @@
 import { Activity, AirVent, ArrowUpRight, Car, LocateFixed, Thermometer, Users, Zap } from 'lucide-react'
 import LocalMap from './LocalMap.jsx'
+import LocationSelector from './LocationSelector.jsx'
 import Sparkline from './Sparkline.jsx'
+import { useEvents } from './useEvents.js'
 import { area, correlation, incidents, tiles } from './data.js'
 
 const TILE_ICONS = { air: AirVent, temp: Thermometer, car: Car, zap: Zap, users: Users }
 
-export default function LocalView() {
+export default function LocalView({ location, onLocationChange, onSelectEvent }) {
+  const { events, radiusKm } = useEvents({ scope: 'local', lat: location.lat, lng: location.lng })
+
   return (
     <div className="cp-container">
       <section className="cp-hero cp-hero--local">
         <div>
-          <p className="cp-eyebrow">{area.eyebrow}</p>
-          <h1 className="cp-h1">{area.name}</h1>
+          <p className="cp-eyebrow">Area pulse / {location.region}</p>
+          <h1 className="cp-h1">{location.label}</h1>
         </div>
         <button type="button" className="cp-recenter">
           <LocateFixed />
           Recenter
         </button>
       </section>
+
+      <LocationSelector location={location} onChange={onLocationChange} />
 
       <section className="cp-card cp-pulse" aria-label="Area pulse">
         <div className="cp-badge">
@@ -60,11 +66,10 @@ export default function LocalView() {
           <header className="cp-card-head">
             <div>
               <p className="cp-label">Live map</p>
-              <h3 className="cp-card-title">Activity around Amer</h3>
+              <h3 className="cp-card-title">Activity around {location.label}</h3>
             </div>
-            <span className="cp-label cp-label--sm">Simulated map</span>
           </header>
-          <LocalMap />
+          <LocalMap center={location} events={events} radiusKm={radiusKm} onSelectEvent={onSelectEvent} />
         </article>
 
         <div className="cp-side">

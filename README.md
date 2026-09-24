@@ -132,4 +132,4 @@ npm install
 npm run dev        # http://localhost:5173
 ```
 
-See `frontend/README.md` for the routes, where the three.js globe goes, and what is still demo data.
+See `frontend/README.md` for the routes, the `GlobeView` component (the 3D globe, fed by this API), and what is still demo data.

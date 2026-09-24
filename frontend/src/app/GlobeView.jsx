@@ -1,30 +1,31 @@
 import { Component, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Globe from 'react-globe.gl'
 import { Map as MapIcon, Satellite } from 'lucide-react'
+import { colorOf, nameOf } from '../lib/severity.js'
+import { formatAgo } from '../lib/time.js'
+import { useReducedMotion } from '../lib/useReducedMotion.js'
 import { useTheme } from './useTheme.js'
+import { useEvents } from './useEvents.js'
 import './GlobeView.css'
 
 /**
  * GlobeView: the GLOBAL view's 3D globe.
  *
- *   <GlobeView onSelectEvent={(event) => ...} theme="light" | "dark" />
+ *   <GlobeView onSelectEvent={(event) => ...} theme="light" | "dark" active />
  *
  * Props (all optional)
  *   onSelectEvent(event)  called with the clicked event, exactly the backend shape
  *                         { id, type, title, lat, lng, timestamp, severity, source, isSimulated, raw }
  *   theme                 "light" | "dark"; defaults to the app theme (<html class="dark">)
- *   apiUrl                events endpoint; defaults to VITE_API_URL or http://localhost:3000, plus /events?scope=global
- *   pollMs                refresh interval, default 45 000
+ *   active                default true. When false, the render loop is paused (AppShell keeps
+ *                         this component mounted-but-hidden while the Local view is shown,
+ *                         since re-initialising the globe is expensive) — data still polls.
+ *   pollMs                refresh interval for GET {API_BASE}/events?scope=global, default 45 000
  *
  * It fills its parent (position: relative; width/height: 100%), so give the parent a size.
  */
 
 // ---- config ---------------------------------------------------------------
-
-const API_BASE = (import.meta.env.VITE_API_URL || 'http://localhost:3000').replace(/\/$/, '')
-const DEFAULT_URL = `${API_BASE}/events?scope=global`
-const DEFAULT_POLL_MS = 45_000
-const MIN_REFETCH_GAP_MS = 10_000 // don't re-fetch on tab focus if we just did
 
 const MAX_POINTS = 500 // three.js cost grows with meshes; keep the most severe / newest
 const MAX_RINGS = 24
@@ -37,8 +38,6 @@ const MODES = {
 }
 const MODE_KEY = 'cp.globeMode'
 
-const SEVERITY_COLORS = { 1: '#94a3b8', 2: '#34c26f', 3: '#f2b01e', 4: '#f97316', 5: '#ef3b4a' } // slate, green, amber, orange, red
-const SEVERITY_NAMES = { 1: 'Info', 2: 'Low', 3: 'Moderate', 4: 'High', 5: 'Critical' }
 const ATMOSPHERE = { light: '#7fb2ff', dark: '#3b82f6' }
 
 const HOME_VIEW = { lat: 26.9855, lng: 75.8513 } // Amer, Jaipur
@@ -50,7 +49,6 @@ const NO_RINGS = []
 
 // ---- point / ring styling (module level so props keep a stable identity) --------
 
-const colorOf = (severity) => SEVERITY_COLORS[severity] || SEVERITY_COLORS[1]
 const pointColor = (e) => colorOf(e.severity)
 const pointAltitude = (e) => 0.006 + (e.severity - 1) * 0.014
 const pointRadius = (e) => 0.22 + (e.severity - 1) * 0.11
@@ -61,7 +59,7 @@ const fade = (hex) => {
   const rgb = `${(n >> 16) & 255},${(n >> 8) & 255},${n & 255}`
   return (t) => `rgba(${rgb},${Math.max(0, 1 - t) ** 0.8})`
 }
-const RING_COLORS = { 4: fade(SEVERITY_COLORS[4]), 5: fade(SEVERITY_COLORS[5]) }
+const RING_COLORS = { 4: fade(colorOf(4)), 5: fade(colorOf(5)) }
 const ringColor = (e) => RING_COLORS[e.severity] || RING_COLORS[4]
 const ringMaxRadius = (e) => (e.severity >= 5 ? 6 : 4)
 const ringSpeed = (e) => (e.severity >= 5 ? 3 : 2)
@@ -70,41 +68,22 @@ const ringPeriod = (e) => (e.severity >= 5 ? 900 : 1500)
 const HTML_ESCAPES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }
 const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (c) => HTML_ESCAPES[c])
 
-function ago(iso) {
-  const minutes = Math.max(0, Math.round((Date.now() - Date.parse(iso)) / 60000))
-  if (Number.isNaN(minutes)) return ''
-  if (minutes < 1) return 'just now'
-  if (minutes < 60) return `${minutes}m ago`
-  const hours = Math.round(minutes / 60)
-  return hours < 48 ? `${hours}h ago` : `${Math.round(hours / 24)}d ago`
-}
-
 // Event titles come from third-party feeds, and the globe tooltip is rendered as HTML: always escape.
 function pointLabel(e) {
-  const time = ago(e.timestamp)
+  const time = formatAgo(e.timestamp)
   return (
     `<div class="gv-tip">` +
     `<div class="gv-tip-title">${esc(e.title)}</div>` +
     `<div class="gv-tip-meta">` +
     `<i class="gv-tip-dot" style="background:${colorOf(e.severity)}"></i>` +
     `<span>${esc(e.source)}</span>` +
-    `<span>${esc(SEVERITY_NAMES[e.severity] || '')} (${e.severity})${time ? ` · ${esc(time)}` : ''}</span>` +
+    `<span>${esc(nameOf(e.severity))} (${e.severity})${time ? ` · ${esc(time)}` : ''}</span>` +
     (e.isSimulated ? `<b class="gv-tip-tag">SIMULATED</b>` : '') +
     `</div></div>`
   )
 }
 
-// ---- data -----------------------------------------------------------------
-
-/** Accept only well-formed events; clamp severity into 1..5. Returns null for junk. */
-function normalize(raw) {
-  if (!raw || typeof raw !== 'object') return null
-  const { id, lat, lng } = raw
-  if (typeof id !== 'string' || !id) return null
-  if (!Number.isFinite(lat) || !Number.isFinite(lng) || Math.abs(lat) > 90 || Math.abs(lng) > 180) return null
-  const severity = Math.min(5, Math.max(1, Math.round(Number(raw.severity)) || 1))
-  return severity === raw.severity ? raw : { ...raw, severity }
-}
+// ---- data shaping (rendering-performance concerns specific to the globe) --------
 
 const sameEvent = (a, b) =>
   a.timestamp === b.timestamp && a.severity === b.severity && a.title === b.title && a.lat === b.lat && a.lng === b.lng && a.isSimulated === b.isSimulated
@@ -112,14 +91,14 @@ const sameEvent = (a, b) =>
 /**
  * Keep the previous object for every event that did not change. The globe binds one mesh to each
  * data object, so reusing objects means a poll only adds / removes the meshes that really changed.
+ * `events` is already validated by the shared useEvents hook.
  */
-function mergeEvents(previous, incoming) {
+function mergeEvents(previous, events) {
   const before = new Map(previous.map((e) => [e.id, e]))
   const seen = new Set()
   const next = []
-  for (const raw of incoming) {
-    const event = normalize(raw)
-    if (!event || seen.has(event.id)) continue
+  for (const event of events) {
+    if (seen.has(event.id)) continue
     seen.add(event.id)
     const old = before.get(event.id)
     next.push(old && sameEvent(old, event) ? old : event)
@@ -135,69 +114,13 @@ function pickPoints(events) {
     .slice(0, MAX_POINTS)
 }
 
-/** The event exactly as the backend sent it (drops the fields the globe adds to its data objects). */
+/** The event exactly as the backend sent it (react-globe.gl attaches its own bookkeeping
+ *  fields onto each point object; strip back to the 10-key contract before handing it out). */
 const toEvent = ({ id, type, title, lat, lng, timestamp, severity, source, isSimulated, raw }) => ({
   id, type, title, lat, lng, timestamp, severity, source, isSimulated, raw,
 })
 
-function useEvents(url, pollMs) {
-  const [events, setEvents] = useState([])
-  const [status, setStatus] = useState('loading') // loading | live | offline
-  const [updatedAt, setUpdatedAt] = useState(null)
-
-  useEffect(() => {
-    let cancelled = false
-    let controller
-    let lastFetch = 0
-
-    const load = async () => {
-      controller?.abort()
-      controller = new AbortController()
-      lastFetch = Date.now()
-      try {
-        const res = await fetch(url, { signal: controller.signal, headers: { Accept: 'application/json' }, cache: 'no-store' })
-        if (!res.ok) throw new Error(`HTTP ${res.status}`)
-        const data = await res.json()
-        if (!Array.isArray(data)) throw new Error('unexpected response')
-        if (cancelled) return
-        setEvents((previous) => mergeEvents(previous, data))
-        setUpdatedAt(new Date())
-        setStatus('live')
-      } catch (err) {
-        if (cancelled || err.name === 'AbortError') return
-        setStatus('offline') // keep showing the last good data
-      }
-    }
-
-    load()
-    const timer = setInterval(() => { if (!document.hidden) load() }, pollMs)
-    const onVisible = () => { if (!document.hidden && Date.now() - lastFetch > MIN_REFETCH_GAP_MS) load() }
-    document.addEventListener('visibilitychange', onVisible)
-    return () => {
-      cancelled = true
-      controller?.abort()
-      clearInterval(timer)
-      document.removeEventListener('visibilitychange', onVisible)
-    }
-  }, [url, pollMs])
-
-  return { events, status, updatedAt }
-}
-
 // ---- small hooks ----------------------------------------------------------
-
-function useReducedMotion() {
-  const query = '(prefers-reduced-motion: reduce)'
-  const [reduced, setReduced] = useState(() => window.matchMedia?.(query).matches ?? false)
-  useEffect(() => {
-    const mq = window.matchMedia?.(query)
-    if (!mq) return undefined
-    const onChange = (e) => setReduced(e.matches)
-    mq.addEventListener('change', onChange)
-    return () => mq.removeEventListener('change', onChange)
-  }, [])
-  return reduced
-}
 
 /** Track an element's size (throttled to one update per frame). */
 function useElementSize(ref) {
@@ -258,7 +181,7 @@ const Unavailable = () => (
 
 // ---- component -------------------------------------------------------------
 
-export default function GlobeView({ onSelectEvent, theme, apiUrl = DEFAULT_URL, pollMs = DEFAULT_POLL_MS }) {
+export default function GlobeView({ onSelectEvent, theme, active = true, pollMs }) {
   const { dark } = useTheme()
   const resolvedTheme = theme || (dark ? 'dark' : 'light')
   const reduced = useReducedMotion()
@@ -271,7 +194,13 @@ export default function GlobeView({ onSelectEvent, theme, apiUrl = DEFAULT_URL, 
   const [mode, setMode] = useState(readStoredMode)
   const [webgl] = useState(hasWebGL)
 
-  const { events, status, updatedAt } = useEvents(apiUrl, pollMs)
+  // Shared fetch/poll/validate; on top of that, GlobeView's own identity-preserving merge
+  // (see mergeEvents above) so a poll only touches the meshes that actually changed.
+  const { events: fetchedEvents, loading, error, lastUpdated } = useEvents({ scope: 'global', pollMs })
+  const [events, setEvents] = useState([])
+  useEffect(() => setEvents((previous) => mergeEvents(previous, fetchedEvents)), [fetchedEvents])
+  const status = error ? 'offline' : loading ? 'loading' : 'live'
+
   const points = useMemo(() => pickPoints(events), [events])
   const rings = useMemo(() => (reduced ? NO_RINGS : points.filter((e) => e.severity >= 4).slice(0, MAX_RINGS)), [points, reduced])
 
@@ -321,13 +250,23 @@ export default function GlobeView({ onSelectEvent, theme, apiUrl = DEFAULT_URL, 
     const aspect = width && height ? width / height : 1
     globe.pointOfView({ ...HOME_VIEW, altitude: aspect >= 1 ? HOME_ALTITUDE : HOME_ALTITUDE / aspect ** 0.85 }, 0)
     threeRef.current = { renderer }
-  }, [scheduleResume])
+    if (!active) globe.pauseAnimation?.() // AppShell may mount this while the Local view is showing
+  }, [scheduleResume, active])
 
   // reduced-motion can change while the page is open
   useEffect(() => {
     const controls = globeRef.current?.controls()
     if (controls && reduced) controls.autoRotate = false
   }, [reduced])
+
+  // AppShell keeps GlobeView mounted-but-hidden while the Local view is active (re-initialising
+  // three.js is expensive); pause/resume its render loop rather than unmounting.
+  useEffect(() => {
+    const globe = globeRef.current
+    if (!globe || !threeRef.current) return
+    if (active) globe.resumeAnimation?.()
+    else globe.pauseAnimation?.()
+  }, [active])
 
   const handlePointClick = useCallback((point) => {
     const globe = globeRef.current
@@ -375,11 +314,11 @@ export default function GlobeView({ onSelectEvent, theme, apiUrl = DEFAULT_URL, 
     }
   }, [])
 
-  const active = MODES[mode]
+  const modeConfig = MODES[mode]
   const ready = size.width > 0 && size.height > 0
 
   return (
-    <div ref={rootRef} className="gv-root" data-theme={resolvedTheme} data-mode={mode}>
+    <div ref={rootRef} className="gv-root" data-theme={resolvedTheme} data-mode={mode} inert={!active}>
       {webgl ? (
         <GlobeBoundary>
           {ready && (
@@ -390,8 +329,8 @@ export default function GlobeView({ onSelectEvent, theme, apiUrl = DEFAULT_URL, 
               rendererConfig={RENDERER_CONFIG}
               animateIn={!reduced}
               backgroundColor="rgba(0,0,0,0)"
-              globeImageUrl={active.globeImageUrl}
-              bumpImageUrl={active.bumpImageUrl}
+              globeImageUrl={modeConfig.globeImageUrl}
+              bumpImageUrl={modeConfig.bumpImageUrl}
               showAtmosphere
               atmosphereColor={ATMOSPHERE[resolvedTheme]}
               atmosphereAltitude={0.2}
@@ -432,7 +371,7 @@ export default function GlobeView({ onSelectEvent, theme, apiUrl = DEFAULT_URL, 
 
       <p className="gv-status" data-status={status} aria-live="polite">
         <i aria-hidden="true" />
-        {status === 'live' && `${events.length} events${updatedAt ? ` · updated ${updatedAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}` : ''}`}
+        {status === 'live' && `${events.length} events${lastUpdated ? ` · updated ${lastUpdated.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}` : ''}`}
         {status === 'loading' && 'Loading events…'}
         {status === 'offline' && `Can't reach the events API, retrying${events.length ? ' (showing last data)' : ''}`}
       </p>

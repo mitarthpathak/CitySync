@@ -12,7 +12,7 @@ const LAYERS = [
   { id: 'incidents', label: 'Incidents', Icon: Bell },
 ]
 
-export default function GlobalView() {
+export default function GlobalView({ active = true, onSelectEvent }) {
   const [layers, setLayers] = useState({ earthquakes: true, weather: true, air_quality: true, incidents: true })
   const toggleLayer = (id) => setLayers((current) => ({ ...current, [id]: !current[id] }))
 
@@ -54,7 +54,7 @@ export default function GlobalView() {
 
         <div className="cp-globe-panel">
           <Suspense fallback={null}>
-            <GlobeView />
+            <GlobeView active={active} onSelectEvent={onSelectEvent} />
           </Suspense>
           <span className="cp-coord cp-coord-n" aria-hidden="true">N 42°</span>
           <span className="cp-coord cp-coord-e" aria-hidden="true">E 74°</span>

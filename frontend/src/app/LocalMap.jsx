@@ -1,68 +1,119 @@
+import { useEffect, useMemo, useRef } from 'react'
+import L from 'leaflet'
+import { Circle, MapContainer, Marker, TileLayer } from 'react-leaflet'
 import { Layers, LocateFixed } from 'lucide-react'
+import { toneOf } from '../lib/severity.js'
+import { useReducedMotion } from '../lib/useReducedMotion.js'
+import { useTheme } from './useTheme.js'
 
-// Illustrative terrain. Coordinates are in the map's own 878 x 327 space.
-const W = 878
-const H = 327
-const pct = (value, total) => `${(value / total) * 100}%`
+// Free, keyless Esri "gray canvas" basemaps: a base layer plus a matching label/roads
+// layer on top. (CartoDB's anonymous basemaps started requiring a key partway through this
+// build — its tiles now render an "API KEY REQUIRED" watermark — so this project uses Esri's
+// keyless ArcGIS Online basemaps instead.) Esri only serves these up to native zoom 16.
+const ESRI_BASE = 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas';
+const TILE_URL = {
+  light: `${ESRI_BASE}/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}`,
+  dark: `${ESRI_BASE}/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}`,
+}
+const LABEL_URL = {
+  light: `${ESRI_BASE}/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}`,
+  dark: `${ESRI_BASE}/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}`,
+}
+const TILE_ATTRIBUTION = 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
+const ESRI_MAX_ZOOM = 16
 
-const PINS = [
-  { id: 'you', tone: 'blue', x: 214, y: 93, focus: true },
-  { id: 'fort', tone: 'amber', x: 565, y: 153, label: 'Amer Fort', strong: true, labelX: 520, labelY: 126 },
-  { id: 'kunda', tone: 'crimson', x: 310, y: 242, label: 'Kunda', labelX: 264, labelY: 220 },
-]
+const ZONE_COLOR = { light: '#2762c9', dark: '#6a9bff' }
+const DEFAULT_ZOOM = 12
 
-function PinIcon() {
-  return (
-    <svg className="cp-pin-icon" width="24" height="28" viewBox="0 0 24 28" aria-hidden="true">
-      <path d="M12 27.2 4.46 20.55A11.4 11.4 0 1 1 19.54 20.55Z" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinejoin="round" />
-      <circle cx="12" cy="12" r="3" fill="currentColor" />
-    </svg>
-  )
+// Reuses the app's existing pin shape/markup (see the earlier illustrative LocalMap) as a
+// Leaflet divIcon, so a marker on the real map looks identical to before.
+function pinIcon(tone, { halo = false } = {}) {
+  return L.divIcon({
+    className: 'cp-leaflet-pin',
+    html:
+      `<span class="cp-pin cp-pin--${tone}">` +
+      (halo ? '<i class="cp-pin-halo"></i><i class="cp-pin-ring"></i>' : '') +
+      '<svg class="cp-pin-icon" width="24" height="28" viewBox="0 0 24 28" aria-hidden="true">' +
+      '<path d="M12 27.2 4.46 20.55A11.4 11.4 0 1 1 19.54 20.55Z" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round"></path>' +
+      '<circle cx="12" cy="12" r="3" fill="currentColor"></circle>' +
+      '</svg></span>',
+    iconSize: [24, 28],
+    iconAnchor: [12, 28],
+  })
 }
 
-export default function LocalMap() {
-  return (
-    <div className="cp-map" role="img" aria-label="Simulated map of activity around Amer">
-      <svg className="cp-map-svg" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" aria-hidden="true">
-        <defs>
-          {/* hex-ish street grid: full-height verticals every 42px, crossing diagonals every 84px */}
-          <pattern id="cp-hex" width="84" height="85" y="64" patternUnits="userSpaceOnUse">
-            <path d="M0.5 0V85M42.5 0V85" className="cp-hex-v" fill="none" />
-            <path d="M0 35 84 85M0 85 84 35" className="cp-hex-d" fill="none" />
-          </pattern>
-        </defs>
-        <rect width={W} height={H} fill="url(#cp-hex)" />
-        <ellipse cx="369" cy="94.5" rx="212" ry="29" transform="rotate(-19.7 369 94.5)" className="cp-map-zone" />
-        <path d="M28 176.7 546 -0.3M203.5 99 313 327M175 204 453 326" className="cp-map-road" fill="none" />
-      </svg>
+/**
+ * LocalMap: a real Leaflet map of activity around the chosen location.
+ *
+ *   <LocalMap center={{ lat, lng }} events={events} radiusKm={15} onSelectEvent={fn} />
+ *
+ * Theme (light/dark tiles) is read from the shared theme context, same as GlobeView, so
+ * both children stay in sync without the parent having to pass it down explicitly.
+ */
+export default function LocalMap({ center, events = [], radiusKm, onSelectEvent }) {
+  const { dark } = useTheme()
+  const reduced = useReducedMotion()
+  const theme = dark ? 'dark' : 'light'
 
-      {PINS.map(({ id, tone, x, y, focus, label, strong, labelX, labelY }) => (
-        <span key={id}>
-          <span className={`cp-pin cp-pin--${tone}`} style={{ left: pct(x, W), top: pct(y, H) }}>
-            {focus && (
-              <>
-                <i className="cp-pin-halo" />
-                <i className="cp-pin-ring" />
-              </>
-            )}
-            <PinIcon />
-          </span>
-          {label && (
-            <span
-              className={`cp-pin-label${strong ? ' is-strong' : ''}`}
-              style={{ left: pct(labelX, W), top: pct(labelY, H) }}
-            >
-              {label}
-            </span>
-          )}
-        </span>
-      ))}
+  const mapRef = useRef(null)
+  const firstRender = useRef(true)
+  const centerIcon = useMemo(() => pinIcon('blue', { halo: true }), [])
+
+  // MapContainer's `center` prop only sets the *initial* view; recenter explicitly whenever
+  // the selected location changes after that (skip the redundant call on first mount).
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false
+      return
+    }
+    mapRef.current?.flyTo([center.lat, center.lng], mapRef.current.getZoom(), { animate: !reduced, duration: reduced ? 0 : 1 })
+  }, [center.lat, center.lng, reduced])
+
+  const recenter = () => mapRef.current?.flyTo([center.lat, center.lng], DEFAULT_ZOOM, { animate: !reduced })
+
+  return (
+    <div className="cp-map">
+      <MapContainer
+        ref={mapRef}
+        center={[center.lat, center.lng]}
+        zoom={DEFAULT_ZOOM}
+        minZoom={3}
+        maxZoom={ESRI_MAX_ZOOM}
+        className="cp-leaflet"
+      >
+        <TileLayer key={`base-${theme}`} url={TILE_URL[theme]} attribution={TILE_ATTRIBUTION} maxNativeZoom={ESRI_MAX_ZOOM} />
+        <TileLayer key={`labels-${theme}`} url={LABEL_URL[theme]} maxNativeZoom={ESRI_MAX_ZOOM} />
+
+        <Circle
+          center={[center.lat, center.lng]}
+          radius={radiusKm * 1000}
+          pathOptions={{ color: ZONE_COLOR[theme], weight: 1, opacity: 0.35, fillColor: ZONE_COLOR[theme], fillOpacity: 0.06 }}
+        />
+
+        <Marker position={[center.lat, center.lng]} icon={centerIcon} />
+
+        {events.map((event) => (
+          <Marker
+            key={event.id}
+            position={[event.lat, event.lng]}
+            icon={pinIcon(toneOf(event.severity))}
+            eventHandlers={{ click: () => onSelectEvent?.(event) }}
+          />
+        ))}
+      </MapContainer>
+
+      {events.length === 0 && (
+        <p className="cp-map-empty">No active signals within {radiusKm} km of this location.</p>
+      )}
 
       <div className="cp-map-controls">
-        <button type="button" aria-label="Recenter map"><LocateFixed /></button>
-        <button type="button" aria-label="Map layers"><Layers /></button>
+        <button type="button" onClick={recenter} aria-label="Recenter map">
+          <LocateFixed />
+        </button>
+        <button type="button" aria-label="Map layers">
+          <Layers />
+        </button>
       </div>
-      <p className="cp-map-credit">© CityPulse map / simulated terrain</p>
     </div>
   )
 }
