@@ -3,15 +3,6 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 // Also read by the inline script in index.html (must match exactly).
 export const THEME_KEY = 'cp.theme'
 
-function readStoredTheme() {
-  try {
-    const stored = localStorage.getItem(THEME_KEY)
-    return stored === 'light' || stored === 'dark' ? stored : null
-  } catch {
-    return null // private mode / storage disabled: fall through to system preference
-  }
-}
-
 const ThemeContext = createContext(null)
 
 /**
@@ -34,16 +25,6 @@ export function ThemeProvider({ children }) {
       /* private mode: theme just won't survive a reload */
     }
   }, [theme])
-
-  // Follow the system preference live, but only until the person picks a theme themselves.
-  useEffect(() => {
-    if (readStoredTheme()) return undefined
-    const mq = window.matchMedia?.('(prefers-color-scheme: dark)')
-    if (!mq) return undefined
-    const onChange = (e) => setThemeState(e.matches ? 'dark' : 'light')
-    mq.addEventListener('change', onChange)
-    return () => mq.removeEventListener('change', onChange)
-  }, [])
 
   const setTheme = useCallback((next) => setThemeState(next === 'dark' ? 'dark' : 'light'), [])
   const toggle = useCallback(() => setThemeState((t) => (t === 'dark' ? 'light' : 'dark')), [])

@@ -20,8 +20,7 @@
     <script>
       (function () {
         try {
-          var k = 'cp.theme', s = localStorage.getItem(k),
-            d = s ? s === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var k = 'cp.theme', s = localStorage.getItem(k), d = s === 'dark';
           document.documentElement.classList.toggle('dark', d);
         } catch (e) {}
       })();
