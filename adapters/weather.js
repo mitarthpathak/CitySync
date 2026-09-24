@@ -65,4 +65,4 @@ async function fetchWeather() {
   ];
 }
 
-module.exports = { fetchWeather };
+module.exports = { fetchWeather, describeWeatherCode, severityFromTemperature };
