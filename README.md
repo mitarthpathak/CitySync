@@ -72,6 +72,12 @@ Returns a JSON array of normalized events, newest first. `scope` defaults to `gl
 | `disabled` | switched off, or a planned stub (`connectors/`) |
 | `sim`      | (`feeds` only, legacy) the built-in Amer simulator |
 
+### `GET /api/brief?lat=..&lng=..`
+
+A one-line "now + next hours + what to do" summary for a point (defaults to Amer), e.g.
+`Now: Partly cloudy, 31°C; Power outage reported in Kunda Village (simulated). Next: Heavy rain likely 5–7 PM (up to 85%). Kunda Village: finish power-dependent work and charge devices before 5 PM.`
+The response also carries the structured `now`, `next` and `actions` items. It is built from the cached local events plus an Open-Meteo hourly forecast for the point. That forecast is cached per ~5 km cell for 15 min. A request for a point that isn't cached yet starts a background fetch and returns `forecast.pending: true`, so poll again after a few seconds. Rain windows and heat/AQI thresholds are project heuristics (`lib/brief.js`), not official warnings.
+
 ## Event schema
 
 Every source normalizes into this shape. The last three fields were added; the original ten keep their meaning.

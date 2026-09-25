@@ -43,7 +43,7 @@ async function fetchPoint(point) {
     id: `flood-${point.name.replace(/\W/g, '-')}-${peakDate ?? Date.now()}`,
     type: 'flood',
     tag: 'ESTIMATED',
-    sourceUrl: 'https://open-meteo.com/en/docs/flood-api',
+    sourceUrl: url,
     title: `Rising river discharge forecast: ${point.river} near ${point.name}`,
     lat: point.lat,
     lng: point.lng,

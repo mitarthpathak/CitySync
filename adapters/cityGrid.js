@@ -73,7 +73,7 @@ async function fetchCityWeather() {
           isSimulated: false,
           layer: 'weather',
           tag: 'REAL_LIVE',
-          sourceUrl: `https://open-meteo.com/en/docs#latitude=${city.lat}&longitude=${city.lng}`,
+          sourceUrl: `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lng}&current=temperature_2m,weather_code,precipitation,wind_speed_10m&hourly=precipitation_probability,precipitation&forecast_days=1&timezone=auto`,
           raw: {
             city: city.name,
             country: city.country,
@@ -106,7 +106,7 @@ async function fetchCityWeather() {
                 id: `rain-forecast-${slug(city.name)}-${current.time}`,
                 type: 'rain_forecast',
                 tag: 'ESTIMATED',
-                sourceUrl: `https://open-meteo.com/en/docs#latitude=${city.lat}&longitude=${city.lng}`,
+                sourceUrl: `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lng}&current=temperature_2m,weather_code,precipitation,wind_speed_10m&hourly=precipitation_probability,precipitation&forecast_days=1&timezone=auto`,
                 title: `${city.name}: ${Math.round(avgProbability)}% chance of rain in the next ${config.rainForecast.windowHours}h`,
                 lat: city.lat,
                 lng: city.lng,
@@ -164,7 +164,7 @@ async function fetchCityAirQuality() {
           isSimulated: false,
           layer: 'air_quality',
           tag: 'REAL_LIVE',
-          sourceUrl: 'https://open-meteo.com/en/docs/air-quality-api',
+          sourceUrl: `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${city.lat}&longitude=${city.lng}&current=us_aqi,pm2_5,pm10&timezone=auto`,
           raw: { city: city.name, country: city.country, us_aqi, band: label, pm2_5 },
         }),
       );

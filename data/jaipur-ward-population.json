@@ -1,0 +1,1049 @@
+{
+  "updatedAt": "2026-09-25T02:27:36.307Z",
+  "source": "WorldPop 2020, 1 km UN-adjusted (ind_ppp_2020_1km_Aggregated_UNadj)",
+  "sourceUrl": "https://data.worldpop.org/GIS/Population/Global_2000_2020_1km_UNadj/2020/IND/ind_ppp_2020_1km_Aggregated_UNadj.tif",
+  "license": "CC BY 4.0 - WorldPop (www.worldpop.org)",
+  "method": "Sum of 1 km pixels whose centre falls inside each ward polygon (approximate at ward edges).",
+  "wards": [
+    {
+      "ward_id": "1",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.1",
+      "population": 10080,
+      "pixels": 8,
+      "lat": 27.02042,
+      "lng": 75.74875
+    },
+    {
+      "ward_id": "3",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.3",
+      "population": 9381,
+      "pixels": 3,
+      "lat": 27.01208,
+      "lng": 75.76681
+    },
+    {
+      "ward_id": "5",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.5",
+      "population": 20032,
+      "pixels": 6,
+      "lat": 27.00375,
+      "lng": 75.79458
+    },
+    {
+      "ward_id": "2",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.2",
+      "population": 8831,
+      "pixels": 4,
+      "lat": 27.00375,
+      "lng": 75.74875
+    },
+    {
+      "ward_id": "4",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.4",
+      "population": 6352,
+      "pixels": 2,
+      "lat": 27.01208,
+      "lng": 75.77375
+    },
+    {
+      "ward_id": "8",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.8",
+      "population": 111906,
+      "pixels": 11,
+      "lat": 26.98481,
+      "lng": 75.78473
+    },
+    {
+      "ward_id": "amer-custom",
+      "ward_name": "Amer custom zone (not an official ward)",
+      "population": 31021,
+      "pixels": 20,
+      "lat": 26.99125,
+      "lng": 75.85292
+    },
+    {
+      "ward_id": "6",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.6",
+      "population": 23583,
+      "pixels": 4,
+      "lat": 26.99125,
+      "lng": 75.75708
+    },
+    {
+      "ward_id": "7",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.7",
+      "population": 20159,
+      "pixels": 2,
+      "lat": 26.99125,
+      "lng": 75.76958
+    },
+    {
+      "ward_id": "9",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.9",
+      "population": 15371,
+      "pixels": 2,
+      "lat": 26.98292,
+      "lng": 75.74875
+    },
+    {
+      "ward_id": "12",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.12",
+      "population": 9472,
+      "pixels": 1,
+      "lat": 26.97875,
+      "lng": 75.74458
+    },
+    {
+      "ward_id": "11",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.11",
+      "population": 26307,
+      "pixels": 2,
+      "lat": 26.97875,
+      "lng": 75.76542
+    },
+    {
+      "ward_id": "43",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.43",
+      "population": 26264,
+      "pixels": 4,
+      "lat": 26.96417,
+      "lng": 75.73208
+    },
+    {
+      "ward_id": "13",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.13",
+      "population": 10497,
+      "pixels": 1,
+      "lat": 26.97042,
+      "lng": 75.74458
+    },
+    {
+      "ward_id": "14",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.14",
+      "population": 12358,
+      "pixels": 1,
+      "lat": 26.97042,
+      "lng": 75.75292
+    },
+    {
+      "ward_id": "16",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.16",
+      "population": 11388,
+      "pixels": 1,
+      "lat": 26.97042,
+      "lng": 75.76125
+    },
+    {
+      "ward_id": "18",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.18",
+      "population": 23997,
+      "pixels": 2,
+      "lat": 26.96625,
+      "lng": 75.76542
+    },
+    {
+      "ward_id": "44",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.44",
+      "population": 15561,
+      "pixels": 2,
+      "lat": 26.95792,
+      "lng": 75.72375
+    },
+    {
+      "ward_id": "19",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.19",
+      "population": 37465,
+      "pixels": 3,
+      "lat": 26.95931,
+      "lng": 75.75014
+    },
+    {
+      "ward_id": "20",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.20",
+      "population": 15526,
+      "pixels": 1,
+      "lat": 26.96208,
+      "lng": 75.76958
+    },
+    {
+      "ward_id": "21",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.21",
+      "population": 14339,
+      "pixels": 1,
+      "lat": 26.96208,
+      "lng": 75.77792
+    },
+    {
+      "ward_id": "22",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.22",
+      "population": 13349,
+      "pixels": 1,
+      "lat": 26.96208,
+      "lng": 75.78625
+    },
+    {
+      "ward_id": "23",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.23",
+      "population": 7545,
+      "pixels": 1,
+      "lat": 26.96208,
+      "lng": 75.79458
+    },
+    {
+      "ward_id": "28",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.28",
+      "population": 21088,
+      "pixels": 2,
+      "lat": 26.95375,
+      "lng": 75.74042
+    },
+    {
+      "ward_id": "31",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.31",
+      "population": 21974,
+      "pixels": 2,
+      "lat": 26.94958,
+      "lng": 75.76125
+    },
+    {
+      "ward_id": "25",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.25",
+      "population": 18488,
+      "pixels": 2,
+      "lat": 26.94958,
+      "lng": 75.76958
+    },
+    {
+      "ward_id": "26",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.26",
+      "population": 15529,
+      "pixels": 1,
+      "lat": 26.95375,
+      "lng": 75.77792
+    },
+    {
+      "ward_id": "24",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.24",
+      "population": 11346,
+      "pixels": 1,
+      "lat": 26.95375,
+      "lng": 75.78625
+    },
+    {
+      "ward_id": "45",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.45",
+      "population": 24214,
+      "pixels": 5,
+      "lat": 26.93375,
+      "lng": 75.70292
+    },
+    {
+      "ward_id": "47",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.47",
+      "population": 18698,
+      "pixels": 3,
+      "lat": 26.94264,
+      "lng": 75.72514
+    },
+    {
+      "ward_id": "32",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.32",
+      "population": 21855,
+      "pixels": 2,
+      "lat": 26.94542,
+      "lng": 75.74042
+    },
+    {
+      "ward_id": "33",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.33",
+      "population": 16739,
+      "pixels": 1,
+      "lat": 26.94542,
+      "lng": 75.75292
+    },
+    {
+      "ward_id": "27",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.27",
+      "population": 11444,
+      "pixels": 1,
+      "lat": 26.94542,
+      "lng": 75.77792
+    },
+    {
+      "ward_id": "46",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.46",
+      "population": 10615,
+      "pixels": 2,
+      "lat": 26.93708,
+      "lng": 75.71542
+    },
+    {
+      "ward_id": "39",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.39",
+      "population": 11340,
+      "pixels": 1,
+      "lat": 26.93708,
+      "lng": 75.73625
+    },
+    {
+      "ward_id": "40",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.40",
+      "population": 28460,
+      "pixels": 2,
+      "lat": 26.93708,
+      "lng": 75.74875
+    },
+    {
+      "ward_id": "38",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.38",
+      "population": 15321,
+      "pixels": 1,
+      "lat": 26.93708,
+      "lng": 75.76125
+    },
+    {
+      "ward_id": "35",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.35",
+      "population": 31032,
+      "pixels": 3,
+      "lat": 26.93431,
+      "lng": 75.77514
+    },
+    {
+      "ward_id": "48",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.48",
+      "population": 15445,
+      "pixels": 2,
+      "lat": 26.92875,
+      "lng": 75.72375
+    },
+    {
+      "ward_id": "42",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.42",
+      "population": 40663,
+      "pixels": 3,
+      "lat": 26.92597,
+      "lng": 75.73903
+    },
+    {
+      "ward_id": "49",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.49",
+      "population": 51796,
+      "pixels": 12,
+      "lat": 26.89958,
+      "lng": 75.70431
+    },
+    {
+      "ward_id": "50",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.50",
+      "population": 33285,
+      "pixels": 4,
+      "lat": 26.91625,
+      "lng": 75.71542
+    },
+    {
+      "ward_id": "51",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.51",
+      "population": 10226,
+      "pixels": 1,
+      "lat": 26.92042,
+      "lng": 75.72792
+    },
+    {
+      "ward_id": "52",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.52",
+      "population": 26292,
+      "pixels": 2,
+      "lat": 26.92042,
+      "lng": 75.74875
+    },
+    {
+      "ward_id": "53",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.53",
+      "population": 11611,
+      "pixels": 1,
+      "lat": 26.91208,
+      "lng": 75.72792
+    },
+    {
+      "ward_id": "54",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.54",
+      "population": 14168,
+      "pixels": 1,
+      "lat": 26.91208,
+      "lng": 75.73625
+    },
+    {
+      "ward_id": "55",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.55",
+      "population": 39685,
+      "pixels": 4,
+      "lat": 26.91,
+      "lng": 75.755
+    },
+    {
+      "ward_id": "150",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.150",
+      "population": 82404,
+      "pixels": 6,
+      "lat": 26.90236,
+      "lng": 75.81403
+    },
+    {
+      "ward_id": "56",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.56",
+      "population": 22930,
+      "pixels": 2,
+      "lat": 26.90375,
+      "lng": 75.72375
+    },
+    {
+      "ward_id": "57",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.57",
+      "population": 13141,
+      "pixels": 1,
+      "lat": 26.90375,
+      "lng": 75.73625
+    },
+    {
+      "ward_id": "58",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.58",
+      "population": 26540,
+      "pixels": 2,
+      "lat": 26.90375,
+      "lng": 75.74875
+    },
+    {
+      "ward_id": "59",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.59",
+      "population": 28279,
+      "pixels": 3,
+      "lat": 26.88986,
+      "lng": 75.72236
+    },
+    {
+      "ward_id": "60",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.60",
+      "population": 11918,
+      "pixels": 1,
+      "lat": 26.89542,
+      "lng": 75.72792
+    },
+    {
+      "ward_id": "61",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.61",
+      "population": 30262,
+      "pixels": 2,
+      "lat": 26.89542,
+      "lng": 75.74042
+    },
+    {
+      "ward_id": "146",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.146",
+      "population": 15770,
+      "pixels": 1,
+      "lat": 26.89542,
+      "lng": 75.78625
+    },
+    {
+      "ward_id": "147",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.147",
+      "population": 13901,
+      "pixels": 1,
+      "lat": 26.89542,
+      "lng": 75.79458
+    },
+    {
+      "ward_id": "142",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.142",
+      "population": 24715,
+      "pixels": 2,
+      "lat": 26.89125,
+      "lng": 75.80292
+    },
+    {
+      "ward_id": "148",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.148",
+      "population": 15454,
+      "pixels": 1,
+      "lat": 26.89542,
+      "lng": 75.81958
+    },
+    {
+      "ward_id": "149",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.149",
+      "population": 13667,
+      "pixels": 1,
+      "lat": 26.89542,
+      "lng": 75.82792
+    },
+    {
+      "ward_id": "63",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.63",
+      "population": 25593,
+      "pixels": 3,
+      "lat": 26.88153,
+      "lng": 75.72792
+    },
+    {
+      "ward_id": "64",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.64",
+      "population": 11316,
+      "pixels": 1,
+      "lat": 26.88708,
+      "lng": 75.74458
+    },
+    {
+      "ward_id": "143",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.143",
+      "population": 10929,
+      "pixels": 1,
+      "lat": 26.88708,
+      "lng": 75.77792
+    },
+    {
+      "ward_id": "144",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.144",
+      "population": 13333,
+      "pixels": 1,
+      "lat": 26.88708,
+      "lng": 75.78625
+    },
+    {
+      "ward_id": "145",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.145",
+      "population": 13607,
+      "pixels": 1,
+      "lat": 26.88708,
+      "lng": 75.79458
+    },
+    {
+      "ward_id": "139",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.139",
+      "population": 10797,
+      "pixels": 1,
+      "lat": 26.88708,
+      "lng": 75.81958
+    },
+    {
+      "ward_id": "121",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.121",
+      "population": 20213,
+      "pixels": 6,
+      "lat": 26.87042,
+      "lng": 75.88208
+    },
+    {
+      "ward_id": "124",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.124",
+      "population": 18233,
+      "pixels": 3,
+      "lat": 26.88431,
+      "lng": 75.88347
+    },
+    {
+      "ward_id": "67",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.67",
+      "population": 25386,
+      "pixels": 10,
+      "lat": 26.86625,
+      "lng": 75.72542
+    },
+    {
+      "ward_id": "68",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.68",
+      "population": 9971,
+      "pixels": 2,
+      "lat": 26.87458,
+      "lng": 75.74458
+    },
+    {
+      "ward_id": "70",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.70",
+      "population": 5004,
+      "pixels": 1,
+      "lat": 26.87875,
+      "lng": 75.75292
+    },
+    {
+      "ward_id": "136",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.136",
+      "population": 12739,
+      "pixels": 2,
+      "lat": 26.87875,
+      "lng": 75.78208
+    },
+    {
+      "ward_id": "141",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.141",
+      "population": 6654,
+      "pixels": 1,
+      "lat": 26.87875,
+      "lng": 75.79458
+    },
+    {
+      "ward_id": "138",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.138",
+      "population": 5455,
+      "pixels": 1,
+      "lat": 26.87875,
+      "lng": 75.80292
+    },
+    {
+      "ward_id": "134",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.134",
+      "population": 21042,
+      "pixels": 5,
+      "lat": 26.87375,
+      "lng": 75.81292
+    },
+    {
+      "ward_id": "110",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.110",
+      "population": 17492,
+      "pixels": 9,
+      "lat": 26.86949,
+      "lng": 75.83718
+    },
+    {
+      "ward_id": "114",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.114",
+      "population": 11101,
+      "pixels": 5,
+      "lat": 26.87208,
+      "lng": 75.86792
+    },
+    {
+      "ward_id": "123",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.123",
+      "population": 6786,
+      "pixels": 2,
+      "lat": 26.87458,
+      "lng": 75.89458
+    },
+    {
+      "ward_id": "69",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.69",
+      "population": 3996,
+      "pixels": 1,
+      "lat": 26.87042,
+      "lng": 75.75292
+    },
+    {
+      "ward_id": "77",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.77",
+      "population": 7182,
+      "pixels": 2,
+      "lat": 26.87042,
+      "lng": 75.77375
+    },
+    {
+      "ward_id": "79",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.79",
+      "population": 4483,
+      "pixels": 1,
+      "lat": 26.87042,
+      "lng": 75.78625
+    },
+    {
+      "ward_id": "133",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.133",
+      "population": 4512,
+      "pixels": 1,
+      "lat": 26.87042,
+      "lng": 75.79458
+    },
+    {
+      "ward_id": "122",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.122",
+      "population": 5994,
+      "pixels": 4,
+      "lat": 26.86208,
+      "lng": 75.90083
+    },
+    {
+      "ward_id": "71",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.71",
+      "population": 13129,
+      "pixels": 5,
+      "lat": 26.85708,
+      "lng": 75.74625
+    },
+    {
+      "ward_id": "72",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.72",
+      "population": 3984,
+      "pixels": 1,
+      "lat": 26.86208,
+      "lng": 75.76125
+    },
+    {
+      "ward_id": "76",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.76",
+      "population": 7427,
+      "pixels": 2,
+      "lat": 26.85792,
+      "lng": 75.76958
+    },
+    {
+      "ward_id": "81",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.81",
+      "population": 15003,
+      "pixels": 4,
+      "lat": 26.85792,
+      "lng": 75.78208
+    },
+    {
+      "ward_id": "128",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.128",
+      "population": 7807,
+      "pixels": 2,
+      "lat": 26.85792,
+      "lng": 75.79458
+    },
+    {
+      "ward_id": "129",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.129",
+      "population": 6548,
+      "pixels": 2,
+      "lat": 26.85792,
+      "lng": 75.80292
+    },
+    {
+      "ward_id": "132",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.132",
+      "population": 6365,
+      "pixels": 2,
+      "lat": 26.86208,
+      "lng": 75.81542
+    },
+    {
+      "ward_id": "120",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.120",
+      "population": 35918,
+      "pixels": 20,
+      "lat": 26.8475,
+      "lng": 75.87083
+    },
+    {
+      "ward_id": "74",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.74",
+      "population": 8850,
+      "pixels": 3,
+      "lat": 26.84819,
+      "lng": 75.75847
+    },
+    {
+      "ward_id": "131",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.131",
+      "population": 8388,
+      "pixels": 2,
+      "lat": 26.85375,
+      "lng": 75.81542
+    },
+    {
+      "ward_id": "113",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.113",
+      "population": 14631,
+      "pixels": 7,
+      "lat": 26.84661,
+      "lng": 75.83863
+    },
+    {
+      "ward_id": "75",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.75",
+      "population": 4206,
+      "pixels": 1,
+      "lat": 26.84542,
+      "lng": 75.76958
+    },
+    {
+      "ward_id": "85",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.85",
+      "population": 3327,
+      "pixels": 1,
+      "lat": 26.84542,
+      "lng": 75.77792
+    },
+    {
+      "ward_id": "87",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.87",
+      "population": 6578,
+      "pixels": 2,
+      "lat": 26.84125,
+      "lng": 75.78625
+    },
+    {
+      "ward_id": "125",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.125",
+      "population": 6921,
+      "pixels": 2,
+      "lat": 26.84542,
+      "lng": 75.79875
+    },
+    {
+      "ward_id": "126",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.126",
+      "population": 4236,
+      "pixels": 1,
+      "lat": 26.84542,
+      "lng": 75.81125
+    },
+    {
+      "ward_id": "127",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.127",
+      "population": 3901,
+      "pixels": 1,
+      "lat": 26.84542,
+      "lng": 75.81958
+    },
+    {
+      "ward_id": "109",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.109",
+      "population": 3088,
+      "pixels": 1,
+      "lat": 26.84542,
+      "lng": 75.82792
+    },
+    {
+      "ward_id": "83",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.83",
+      "population": 11435,
+      "pixels": 4,
+      "lat": 26.82875,
+      "lng": 75.76542
+    },
+    {
+      "ward_id": "84",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.84",
+      "population": 10384,
+      "pixels": 3,
+      "lat": 26.83431,
+      "lng": 75.77514
+    },
+    {
+      "ward_id": "106",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.106",
+      "population": 12481,
+      "pixels": 4,
+      "lat": 26.835,
+      "lng": 75.805
+    },
+    {
+      "ward_id": "107",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.107",
+      "population": 6005,
+      "pixels": 2,
+      "lat": 26.83292,
+      "lng": 75.81958
+    },
+    {
+      "ward_id": "108",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.108",
+      "population": 3460,
+      "pixels": 1,
+      "lat": 26.83708,
+      "lng": 75.82792
+    },
+    {
+      "ward_id": "104",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.104",
+      "population": 10218,
+      "pixels": 3,
+      "lat": 26.82597,
+      "lng": 75.79181
+    },
+    {
+      "ward_id": "105",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.105",
+      "population": 9189,
+      "pixels": 3,
+      "lat": 26.82597,
+      "lng": 75.81403
+    },
+    {
+      "ward_id": "112",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.112",
+      "population": 2745,
+      "pixels": 1,
+      "lat": 26.82875,
+      "lng": 75.82792
+    },
+    {
+      "ward_id": "117",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.117",
+      "population": 7631,
+      "pixels": 3,
+      "lat": 26.82875,
+      "lng": 75.85292
+    },
+    {
+      "ward_id": "119",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.119",
+      "population": 27451,
+      "pixels": 16,
+      "lat": 26.81156,
+      "lng": 75.86802
+    },
+    {
+      "ward_id": "88",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.88",
+      "population": 4905,
+      "pixels": 2,
+      "lat": 26.82042,
+      "lng": 75.75708
+    },
+    {
+      "ward_id": "89",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.89",
+      "population": 4075,
+      "pixels": 1,
+      "lat": 26.82042,
+      "lng": 75.77792
+    },
+    {
+      "ward_id": "90",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.90",
+      "population": 3974,
+      "pixels": 1,
+      "lat": 26.82042,
+      "lng": 75.78625
+    },
+    {
+      "ward_id": "111",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.111",
+      "population": 5914,
+      "pixels": 2,
+      "lat": 26.82042,
+      "lng": 75.81542
+    },
+    {
+      "ward_id": "115",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.115",
+      "population": 16337,
+      "pixels": 6,
+      "lat": 26.81347,
+      "lng": 75.83347
+    },
+    {
+      "ward_id": "116",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.116",
+      "population": 8053,
+      "pixels": 3,
+      "lat": 26.80931,
+      "lng": 75.84736
+    },
+    {
+      "ward_id": "91",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.91",
+      "population": 15070,
+      "pixels": 6,
+      "lat": 26.80792,
+      "lng": 75.76125
+    },
+    {
+      "ward_id": "92",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.92",
+      "population": 7175,
+      "pixels": 2,
+      "lat": 26.80792,
+      "lng": 75.77792
+    },
+    {
+      "ward_id": "93",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.93",
+      "population": 4273,
+      "pixels": 1,
+      "lat": 26.81208,
+      "lng": 75.78625
+    },
+    {
+      "ward_id": "95",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.95",
+      "population": 7041,
+      "pixels": 2,
+      "lat": 26.80792,
+      "lng": 75.79875
+    },
+    {
+      "ward_id": "100",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.100",
+      "population": 7826,
+      "pixels": 2,
+      "lat": 26.81208,
+      "lng": 75.80708
+    },
+    {
+      "ward_id": "101",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.101",
+      "population": 3201,
+      "pixels": 1,
+      "lat": 26.81208,
+      "lng": 75.81958
+    },
+    {
+      "ward_id": "94",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.94",
+      "population": 6579,
+      "pixels": 2,
+      "lat": 26.80375,
+      "lng": 75.79042
+    },
+    {
+      "ward_id": "102",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.102",
+      "population": 7074,
+      "pixels": 2,
+      "lat": 26.80375,
+      "lng": 75.81542
+    },
+    {
+      "ward_id": "118",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.118",
+      "population": 17365,
+      "pixels": 6,
+      "lat": 26.79542,
+      "lng": 75.84319
+    },
+    {
+      "ward_id": "96",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.96",
+      "population": 10636,
+      "pixels": 5,
+      "lat": 26.79375,
+      "lng": 75.76625
+    },
+    {
+      "ward_id": "97",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.97",
+      "population": 4870,
+      "pixels": 2,
+      "lat": 26.79542,
+      "lng": 75.79042
+    },
+    {
+      "ward_id": "98",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.98",
+      "population": 8102,
+      "pixels": 3,
+      "lat": 26.78986,
+      "lng": 75.80569
+    },
+    {
+      "ward_id": "99",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.99",
+      "population": 9473,
+      "pixels": 3,
+      "lat": 26.78708,
+      "lng": 75.81681
+    },
+    {
+      "ward_id": "103",
+      "ward_name": "Jaipur (M Corp.) (Part) - Ward No.103",
+      "population": 3287,
+      "pixels": 1,
+      "lat": 26.79542,
+      "lng": 75.81958
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+[
+  {
+    "name": "SMS Hospital",
+    "kind": "hospital",
+    "lat": 26.9060159,
+    "lng": 75.8161049,
+    "geocoder": "Nominatim (one-time build cache)"
+  },
+  {
+    "name": "Jaipur Junction",
+    "kind": "railway",
+    "lat": 26.9207888,
+    "lng": 75.7866539,
+    "geocoder": "Nominatim (one-time build cache)"
+  },
+  {
+    "name": "Jaipur International Airport",
+    "kind": "airport",
+    "lat": 26.8281087,
+    "lng": 75.8079888,
+    "geocoder": "Nominatim (one-time build cache)"
+  },
+  {
+    "name": "Sindhi Camp Bus Stand",
+    "kind": "bus",
+    "lat": 26.923305,
+    "lng": 75.8006345,
+    "geocoder": "Nominatim (one-time build cache)"
+  }
+]

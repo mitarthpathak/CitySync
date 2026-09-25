@@ -107,7 +107,7 @@ async function fetchAnomalies() {
           isSimulated: false,
           layer: 'anomaly',
           tag: 'REAL_STATIC',
-          sourceUrl: `https://open-meteo.com/en/docs/historical-weather-api#latitude=${city.lat}&longitude=${city.lng}`,
+          sourceUrl: `${API}?latitude=${city.lat}&longitude=${city.lng}&start_date=${target}&end_date=${target}&daily=temperature_2m_max&timezone=GMT`,
           raw: {
             city: city.name,
             country: city.country,

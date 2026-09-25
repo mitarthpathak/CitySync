@@ -43,6 +43,7 @@ async function fetchAirQuality() {
       severity,
       source: 'Open-Meteo AQ',
       isSimulated: false,
+      sourceUrl: URL,
       raw: { us_aqi, pm2_5, pm10 },
     }),
   ];
