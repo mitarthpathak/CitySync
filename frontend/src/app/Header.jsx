@@ -1,4 +1,4 @@
-import { Link, NavLink } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { Database, MapPin } from 'lucide-react'
 import ThemeButton from './ThemeButton.jsx'
 import { useHealth } from './useEvents.js'
@@ -35,18 +35,12 @@ function Logo() {
 }
 
 export default function Header({ view, location, onOpenSources }) {
-  const tab = ({ isActive }) => (isActive ? 'is-active' : undefined)
   return (
     <header className="cp-header">
       <Link to="/" className="cp-logo" aria-label="CitySync: back to the landing page">
         <Logo />
         <span>CitySync</span>
       </Link>
-
-      <nav className="cp-viewtoggle" aria-label="View">
-        <NavLink to="/app" end className={tab}><span aria-hidden="true">{'\u{1F30D}'}</span> Global</NavLink>
-        <NavLink to="/app/local" className={tab}><span aria-hidden="true">{'\u{1F4CD}'}</span> Local</NavLink>
-      </nav>
 
       <div className="cp-header-right">
         <HealthStatus />
