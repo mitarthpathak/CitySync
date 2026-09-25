@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import L from 'leaflet'
 import { Circle, GeoJSON, MapContainer, Marker, Polyline, TileLayer, Tooltip } from 'react-leaflet'
+import MarkerClusterGroup from 'react-leaflet-cluster'
+import 'leaflet.markercluster/dist/MarkerCluster.css'
 import { LocateFixed, Map as MapIcon, Maximize2, Minimize2, Satellite } from 'lucide-react'
 import { toneOf } from '../lib/severity.js'
 import { useReducedMotion } from '../lib/useReducedMotion.js'
@@ -38,7 +40,9 @@ const DEFAULT_ZOOM = 12
 // center, so prediction vs. observation is obvious at a glance without a new pin shape.
 function pinIcon(tone, { halo = false, dashed = false } = {}) {
   return L.divIcon({
-    className: 'cp-leaflet-pin',
+    // `cp-tone-${tone}` isn't styled itself - it's just how a cluster (see clusterIcon
+    // below) reads back a clustered marker's severity tier without re-deriving it.
+    className: `cp-leaflet-pin cp-tone-${tone}`,
     html:
       `<span class="cp-pin cp-pin--${tone}${dashed ? ' cp-pin--forecast' : ''}">` +
       (halo ? '<i class="cp-pin-halo"></i><i class="cp-pin-ring"></i>' : '') +
@@ -48,6 +52,26 @@ function pinIcon(tone, { halo = false, dashed = false } = {}) {
       '</svg></span>',
     iconSize: [24, 28],
     iconAnchor: [12, 28],
+  })
+}
+
+const TONE_RANK = { blue: 0, amber: 1, crimson: 2 }
+
+/** A clustered pile of markers, zoomed out: one badge showing the count, tinted by the
+ * highest severity tier inside it - so a cluster hiding a critical alert still reads red. */
+function clusterIcon(cluster) {
+  const count = cluster.getChildCount()
+  const tone = cluster.getAllChildMarkers().reduce((worst, marker) => {
+    const className = marker.options.icon?.options?.className || ''
+    const markerTone = className.includes('cp-tone-crimson') ? 'crimson' : className.includes('cp-tone-amber') ? 'amber' : 'blue'
+    return TONE_RANK[markerTone] > TONE_RANK[worst] ? markerTone : worst
+  }, 'blue')
+  const size = count >= 50 ? 46 : count >= 10 ? 38 : 30
+  return L.divIcon({
+    className: 'cp-cluster-wrap',
+    html: `<span class="cp-cluster cp-cluster--${tone}">${count}</span>`,
+    iconSize: [size, size],
+    iconAnchor: [size / 2, size / 2],
   })
 }
 
@@ -93,6 +117,17 @@ export default function LocalMap({ center, events = [], radiusKm, wards = null, 
     const timer = setTimeout(() => mapRef.current?.invalidateSize({ animate: !reduced }), 320)
     return () => clearTimeout(timer)
   }, [isFullscreen, reduced])
+
+  // Above 1100px the map fills the grid row's stretched height (see .cp-map in app.css), which
+  // changes as the side column's content (e.g. the incident feed) grows or shrinks - keep
+  // Leaflet's own size cache in sync whenever that actually happens, not just on our own toggles.
+  useEffect(() => {
+    const container = mapRef.current?.getContainer()
+    if (!container || typeof ResizeObserver === 'undefined') return undefined
+    const observer = new ResizeObserver(() => mapRef.current?.invalidateSize())
+    observer.observe(container)
+    return () => observer.disconnect()
+  }, [])
 
   // Bhuvan access routes carry their road geometry as [lng, lat] line arrays in raw.
   const accessRoutes = events.filter((e) => e.layer === 'access_routes' && layers.access_routes !== false && Array.isArray(e.raw?.route_geometry))
@@ -168,14 +203,16 @@ export default function LocalMap({ center, events = [], radiusKm, wards = null, 
           </Polyline>
         ))}
 
-        {events.filter((event) => layers[event.layer] !== false && (layers.simulated !== false || event.tag !== 'SIMULATED')).map((event) => (
-          <Marker
-            key={event.id}
-            position={[event.lat, event.lng]}
-            icon={pinIcon(toneOf(event.severity), { dashed: event.tag === 'ESTIMATED' })}
-            eventHandlers={{ click: () => onSelectEvent?.(event) }}
-          />
-        ))}
+        <MarkerClusterGroup iconCreateFunction={clusterIcon} showCoverageOnHover={false} spiderfyOnMaxZoom maxClusterRadius={50}>
+          {events.filter((event) => layers[event.layer] !== false && (layers.simulated !== false || event.tag !== 'SIMULATED')).map((event) => (
+            <Marker
+              key={event.id}
+              position={[event.lat, event.lng]}
+              icon={pinIcon(toneOf(event.severity), { dashed: event.tag === 'ESTIMATED' })}
+              eventHandlers={{ click: () => onSelectEvent?.(event) }}
+            />
+          ))}
+        </MarkerClusterGroup>
       </MapContainer>
 
       {layers.wards !== false && <p className="cp-ward-attribution">OpenCity.in — Jaipur Municipal Corporation Wards Map</p>}

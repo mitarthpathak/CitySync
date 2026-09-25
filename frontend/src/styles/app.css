@@ -62,14 +62,23 @@ body.cp-body {
 .cp-logo { display: inline-flex; align-items: center; gap: 10px; padding-right: 4px; font-size: 15px; font-weight: 700; letter-spacing: -0.04em; color: var(--cp-fg); }
 .cp-logo-mark { display: block; flex: none; width: 29px; height: 20px; color: var(--cp-fg); }
 
-.cp-viewtoggle { display: flex; gap: 4px; padding: 3px; border: 1px solid var(--cp-line); border-radius: 6px; background: var(--cp-surface); }
-.cp-viewtoggle a {
-  display: inline-flex; align-items: center; gap: 4px; height: 26px; padding: 0 12px; border-radius: 4px;
-  font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cp-muted);
+/* Floats above the header, centered, always on top regardless of scroll - a "dynamic
+   island" for the Global/Local switch. */
+.cp-island {
+  position: fixed; top: 14px; left: 50%; transform: translateX(-50%); z-index: 60;
+  display: flex; gap: 4px; padding: 3px; border: 1px solid var(--cp-line); border-radius: 999px;
+  background: color-mix(in srgb, var(--cp-surface) 88%, transparent);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .16);
+  transition: box-shadow .2s ease;
 }
-.cp-viewtoggle a.is-active { background: var(--cp-fg); color: var(--cp-bg); }
-.cp-viewtoggle small { font-size: 9px; font-weight: 400; letter-spacing: 0.04em; text-transform: none; }
-.cp-viewtoggle a.is-active small { opacity: 0.75; }
+.cp-island:hover { box-shadow: 0 10px 28px rgba(0, 0, 0, .22); }
+.cp-island a {
+  display: inline-flex; align-items: center; gap: 4px; height: 26px; padding: 0 14px; border-radius: 999px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cp-muted);
+  transition: background .18s ease, color .18s ease;
+}
+.cp-island a.is-active { background: var(--cp-fg); color: var(--cp-bg); }
 
 .cp-header-right { display: flex; align-items: center; gap: 18px; }
 .cp-status { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: var(--cp-muted); }
@@ -286,7 +295,7 @@ body.cp-body {
 .cp-card-head { display: flex; align-items: center; justify-content: space-between; }
 .cp-card-title { margin: 8px 0 0; font-size: 15px; line-height: 18px; font-weight: 700; letter-spacing: -0.02em; }
 
-.cp-mapcard { padding: 22px; }
+.cp-mapcard { padding: 22px; display: flex; flex-direction: column; }
 .cp-mapcard .cp-card-head { margin-bottom: 21px; }
 .cp-map { position: relative; overflow: hidden; aspect-ratio: 878 / 327; background: var(--cp-surface); }
 .cp-map--fullscreen {
@@ -321,6 +330,19 @@ body.cp-body {
 
 /* A Leaflet divIcon has its own default box/border; strip it back to just our pin markup. */
 .cp-leaflet-pin { background: transparent !important; border: 0 !important; }
+
+/* A clustered pile of pins, collapsed to one badge (see clusterIcon in LocalMap.jsx). Tinted
+   like a pin (blue/amber/crimson) instead of leaflet.markercluster's default yellow/orange/red,
+   so it reads as "this app's markers, just bunched up" rather than a different severity scale. */
+.cp-cluster-wrap { background: transparent !important; border: 0 !important; }
+.cp-cluster {
+  display: grid; place-items: center; width: 100%; height: 100%; border-radius: 50%;
+  border: 2px solid var(--cp-card); box-shadow: 0 1px 4px rgba(0, 0, 0, .25);
+  color: #fff; font-weight: 700; font-size: 12px; font-variant-numeric: tabular-nums;
+}
+.cp-cluster--blue { background: var(--cp-blue); }
+.cp-cluster--amber { background: var(--cp-amber); }
+.cp-cluster--crimson { background: var(--cp-crimson); }
 
 .cp-pin { display: block; }
 .cp-pin-icon { display: block; }
@@ -477,6 +499,11 @@ body.cp-body {
   .cp-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .cp-local-grid { grid-template-columns: 1fr; }
 }
+/* Above 1100px the map card and the side column sit next to each other in a stretched grid
+   row; let the map grow to fill that row instead of leaving blank card space below it. */
+@media (min-width: 1101px) {
+  .cp-map { aspect-ratio: auto; flex: 1 1 auto; min-height: 327px; }
+}
 @media (max-width: 900px) {
   .cp-header { padding: 0 16px; gap: 12px; }
   .cp-status { display: none; }
@@ -501,7 +528,8 @@ body.cp-body {
 }
 @media (max-width: 640px) {
   .cp-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .cp-viewtoggle a { padding: 0 9px; }
+  .cp-island a { padding: 0 9px; }
+  .cp-island { top: 10px; }
   .cp-place { display: none; }
   .cp-header { padding: 0 12px; }
   .cp-header-right { gap: 4px; } /* the data-sources button added a 3rd icon; keep them from overflowing */

@@ -8,6 +8,7 @@
 // Add or remove cities freely; ~40-60 keeps both requests comfortably small.
 module.exports = Object.freeze([
   // Asia
+  { name: 'Achrol / Amity University', country: 'India', lat: 27.1764, lng: 75.9568 },
   { name: 'Delhi', country: 'India', lat: 28.6139, lng: 77.209 },
   { name: 'Mumbai', country: 'India', lat: 19.076, lng: 72.8777 },
   { name: 'Kolkata', country: 'India', lat: 22.5726, lng: 88.3639 },

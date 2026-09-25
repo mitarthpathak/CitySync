@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import Header from './Header.jsx'
 import ThemeButton from './ThemeButton.jsx'
@@ -12,6 +12,19 @@ import { useReducedMotion } from '../lib/useReducedMotion.js'
 
 const TRANSITION_MS = 0.34 // ~340ms, within the requested 300-400ms range
 const EASE = [0.4, 0, 0.2, 1] // calm, no overshoot
+
+// The Global/Local switch, floating over everything as its own fixed pill (a "dynamic
+// island") instead of living inside the header row, so it never scrolls out of reach on
+// the tall Local screen.
+function ViewIsland() {
+  const tab = ({ isActive }) => (isActive ? 'is-active' : undefined)
+  return (
+    <nav className="cp-island" aria-label="View">
+      <NavLink to="/app" end className={tab}><span aria-hidden="true">{'\u{1F30D}'}</span> Global</NavLink>
+      <NavLink to="/app/local" className={tab}><span aria-hidden="true">{'\u{1F4CD}'}</span> Local</NavLink>
+    </nav>
+  )
+}
 
 /**
  * Owns the Global ⇄ Local toggle, the shared theme, the selected-location and
@@ -46,6 +59,7 @@ export default function AppShell() {
   return (
     <div className="cp-app">
       <Header view={view} location={location} onOpenSources={() => setShowSources(true)} />
+      <ViewIsland />
       <main className="cp-main">
         <div className="cp-view-stack">
           {/* Always mounted: switching to Local must not tear down (and later re-init) the globe. */}
