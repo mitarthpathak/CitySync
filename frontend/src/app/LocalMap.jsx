@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import L from 'leaflet'
 import { Circle, GeoJSON, MapContainer, Marker, Polyline, TileLayer, Tooltip } from 'react-leaflet'
-import { Layers, LocateFixed } from 'lucide-react'
+import { LocateFixed, Map as MapIcon, Satellite } from 'lucide-react'
 import { toneOf } from '../lib/severity.js'
 import { useReducedMotion } from '../lib/useReducedMotion.js'
 import { useTheme } from './useTheme.js'
@@ -11,6 +11,7 @@ import { useTheme } from './useTheme.js'
 // build — its tiles now render an "API KEY REQUIRED" watermark — so this project uses Esri's
 // keyless ArcGIS Online basemaps instead.) Esri only serves these up to native zoom 16.
 const ESRI_BASE = 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas';
+const ESRI_SERVICES = 'https://server.arcgisonline.com/ArcGIS/rest/services'
 const TILE_URL = {
   light: `${ESRI_BASE}/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}`,
   dark: `${ESRI_BASE}/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}`,
@@ -19,6 +20,8 @@ const LABEL_URL = {
   light: `${ESRI_BASE}/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}`,
   dark: `${ESRI_BASE}/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}`,
 }
+const SATELLITE_URL = `${ESRI_SERVICES}/World_Imagery/MapServer/tile/{z}/{y}/{x}`
+const SATELLITE_LABEL_URL = `${ESRI_SERVICES}/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}`
 const TILE_ATTRIBUTION = 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
 const ESRI_MAX_ZOOM = 16
 
@@ -65,6 +68,7 @@ export default function LocalMap({ center, events = [], radiusKm, wards = null, 
   const firstRender = useRef(true)
   const centerIcon = useMemo(() => pinIcon('blue', { halo: true }), [])
   const [busRoutes, setBusRoutes] = useState(null)
+  const [satellite, setSatellite] = useState(false)
   const showTransit = layers.transit !== false
   useEffect(() => {
     if (!showTransit || busRoutes) return
@@ -103,8 +107,17 @@ export default function LocalMap({ center, events = [], radiusKm, wards = null, 
         maxZoom={ESRI_MAX_ZOOM}
         className="cp-leaflet"
       >
-        <TileLayer key={`base-${theme}`} url={TILE_URL[theme]} attribution={TILE_ATTRIBUTION} maxNativeZoom={ESRI_MAX_ZOOM} />
-        <TileLayer key={`labels-${theme}`} url={LABEL_URL[theme]} maxNativeZoom={ESRI_MAX_ZOOM} />
+        <TileLayer
+          key={`base-${satellite ? 'satellite' : theme}`}
+          url={satellite ? SATELLITE_URL : TILE_URL[theme]}
+          attribution={TILE_ATTRIBUTION}
+          maxNativeZoom={ESRI_MAX_ZOOM}
+        />
+        <TileLayer
+          key={`labels-${satellite ? 'satellite' : theme}`}
+          url={satellite ? SATELLITE_LABEL_URL : LABEL_URL[theme]}
+          maxNativeZoom={ESRI_MAX_ZOOM}
+        />
 
         <Circle
           center={[center.lat, center.lng]}
@@ -155,8 +168,15 @@ export default function LocalMap({ center, events = [], radiusKm, wards = null, 
         <button type="button" onClick={recenter} aria-label="Recenter map">
           <LocateFixed />
         </button>
-        <button type="button" aria-label="Map layers">
-          <Layers />
+        <button
+          type="button"
+          className="cp-map-type-button"
+          onClick={() => setSatellite((current) => !current)}
+          aria-label={satellite ? 'Switch to standard map view' : 'Switch to satellite view'}
+          aria-pressed={satellite}
+          title={satellite ? 'Map view' : 'Satellite view'}
+        >
+          {satellite ? <MapIcon /> : <Satellite />}
         </button>
       </div>
     </div>

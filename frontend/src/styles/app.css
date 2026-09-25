@@ -327,6 +327,7 @@ body.cp-body {
 
 .cp-map-controls { position: absolute; top: 14px; right: 14px; z-index: 500; display: flex; flex-direction: column; gap: 5px; }
 .cp-map-controls button { display: grid; place-items: center; width: 30px; height: 30px; border: 1px solid var(--cp-line); background: var(--cp-card); color: var(--cp-fg); cursor: pointer; }
+.cp-map-controls button:hover, .cp-map-controls button[aria-pressed="true"] { background: var(--cp-surface); border-color: var(--cp-blue); color: var(--cp-blue); }
 .cp-map-controls svg { width: 14px; height: 14px; }
 
 .cp-map-empty {
