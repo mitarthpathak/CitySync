@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import L from 'leaflet'
 import { Circle, GeoJSON, MapContainer, Marker, Polyline, TileLayer, Tooltip } from 'react-leaflet'
-import { LocateFixed, Map as MapIcon, Satellite } from 'lucide-react'
+import { LocateFixed, Map as MapIcon, Maximize2, Minimize2, Satellite } from 'lucide-react'
 import { toneOf } from '../lib/severity.js'
 import { useReducedMotion } from '../lib/useReducedMotion.js'
 import { useTheme } from './useTheme.js'
@@ -69,11 +69,31 @@ export default function LocalMap({ center, events = [], radiusKm, wards = null, 
   const centerIcon = useMemo(() => pinIcon('blue', { halo: true }), [])
   const [busRoutes, setBusRoutes] = useState(null)
   const [satellite, setSatellite] = useState(false)
+  const [isFullscreen, setIsFullscreen] = useState(false)
   const showTransit = layers.transit !== false
   useEffect(() => {
     if (!showTransit || busRoutes) return
     fetch(JCTSL_ROUTES_URL).then((r) => (r.ok ? r.json() : null)).then(setBusRoutes).catch(() => {})
   }, [showTransit, busRoutes])
+  // Fullscreen toggle: expands the map card to cover the viewport. The container resize
+  // happens mid-animation, so Leaflet's internal size cache goes stale until we nudge it
+  // with invalidateSize() once the CSS animation (280ms) finishes.
+  useEffect(() => {
+    if (!isFullscreen) return
+    const onKeyDown = (e) => { if (e.key === 'Escape') setIsFullscreen(false) }
+    document.addEventListener('keydown', onKeyDown)
+    const prevOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.removeEventListener('keydown', onKeyDown)
+      document.body.style.overflow = prevOverflow
+    }
+  }, [isFullscreen])
+  useEffect(() => {
+    const timer = setTimeout(() => mapRef.current?.invalidateSize({ animate: !reduced }), 320)
+    return () => clearTimeout(timer)
+  }, [isFullscreen, reduced])
+
   // Bhuvan access routes carry their road geometry as [lng, lat] line arrays in raw.
   const accessRoutes = events.filter((e) => e.layer === 'access_routes' && layers.access_routes !== false && Array.isArray(e.raw?.route_geometry))
 
@@ -98,7 +118,7 @@ export default function LocalMap({ center, events = [], radiusKm, wards = null, 
   }
 
   return (
-    <div className="cp-map">
+    <div className={`cp-map${isFullscreen ? ' cp-map--fullscreen' : ''}`}>
       <MapContainer
         ref={mapRef}
         center={[center.lat, center.lng]}
@@ -177,6 +197,14 @@ export default function LocalMap({ center, events = [], radiusKm, wards = null, 
           title={satellite ? 'Map view' : 'Satellite view'}
         >
           {satellite ? <MapIcon /> : <Satellite />}
+        </button>
+        <button
+          type="button"
+          onClick={() => setIsFullscreen((v) => !v)}
+          aria-label={isFullscreen ? 'Exit fullscreen' : 'Fullscreen map'}
+          aria-pressed={isFullscreen}
+        >
+          {isFullscreen ? <Minimize2 /> : <Maximize2 />}
         </button>
       </div>
     </div>

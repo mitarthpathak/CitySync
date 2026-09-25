@@ -78,18 +78,19 @@ function Hero() {
       <div className="hero-sticky">
         <div className="container hero-content">
           <div className="hero-copy" style={{ opacity: 1 - Math.max(0, progress - .1) * 1.6, transform: `translateY(${progress * -40}px)` }}>
-            <EntryFade as="p" className="eyebrow" delay={0.1} y={14} blur={8}><span className="live-dot" /> Live civic intelligence</EntryFade>
-            <EntryFade as="h1" delay={0.18} y={18} blur={10}>Know your city.<br /><em>In a heartbeat.</em></EntryFade>
-            <EntryFade as="p" className="hero-sub" delay={0.26} y={14} blur={8}>CitySync turns the noise of a living city into one clear, human pulse.</EntryFade>
-            <EntryFade as={MotionLink} to="/app" className="button button-primary" delay={0.34} y={14} blur={6} whileTap={{ scale: 0.97, transition: { duration: 0.15 } }}>See the pulse <ArrowRight /></EntryFade>
+            <EntryFade as="p" className="eyebrow" delay={0.2} y={20} blur={10}><span className="live-dot" /> Live civic intelligence</EntryFade>
+            <EntryFade as="h1" delay={0.35} y={26} blur={14}>Know your city.<br /><em>In a heartbeat.</em></EntryFade>
+            <EntryFade as="p" className="hero-sub" delay={0.5} y={20} blur={10}>CitySync turns the noise of a living city into one clear, human pulse.</EntryFade>
+            <EntryFade as={MotionLink} to="/app" className="button button-primary" delay={0.65} y={20} blur={8} whileTap={{ scale: 0.97, transition: { duration: 0.15 } }}>See the pulse <ArrowRight /></EntryFade>
           </div>
           <EntryFade
             as="div"
             className={`pulse-stage ${assembled ? 'is-assembled' : ''}`}
             style={{ '--progress': progress }}
             y={0}
-            blur={14}
-            duration={1.1}
+            blur={20}
+            duration={1.8}
+            delay={0.15}
           >
             <div className="stage-grid" />
             {fragments.map((fragment, index) => (

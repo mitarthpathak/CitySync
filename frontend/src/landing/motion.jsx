@@ -34,7 +34,7 @@ function fadeTargets(y, blur) {
  * element/component (default "div"), so it can replace an existing tag in place
  * instead of adding a wrapper.
  */
-export function EntryFade({ children, delay = 0, duration = 0.9, y = 16, blur = 10, className, as = 'div', ...rest }) {
+export function EntryFade({ children, delay = 0, duration = 1.4, y = 26, blur = 16, className, as = 'div', ...rest }) {
   const reduced = useReducedMotion()
   const Tag = resolveTag(as)
   const [from, to] = fadeTargets(y, blur)
@@ -56,7 +56,7 @@ export function EntryFade({ children, delay = 0, duration = 0.9, y = 16, blur = 
  * sites (`<Reveal>`, `<Reveal className="...">`), now Framer Motion powered and
  * blur-aware. Fires once, ~20-25% into the viewport, and never re-hides.
  */
-export function Reveal({ children, className = '', y = 28, blur = 6, delay = 0, amount = 0.25, as = 'div', ...rest }) {
+export function Reveal({ children, className = '', y = 46, blur = 12, delay = 0, amount = 0.25, as = 'div', ...rest }) {
   const reduced = useReducedMotion()
   const Tag = resolveTag(as)
   const [from, to] = fadeTargets(y, blur)
@@ -66,7 +66,7 @@ export function Reveal({ children, className = '', y = 28, blur = 6, delay = 0, 
       initial={reduced ? false : from}
       whileInView={to}
       viewport={{ once: true, amount }}
-      transition={{ duration: reduced ? 0 : 0.6, delay: reduced ? 0 : delay, ease: EASE }}
+      transition={{ duration: reduced ? 0 : 1.1, delay: reduced ? 0 : delay, ease: EASE }}
       {...rest}
     >
       {children}
@@ -80,7 +80,7 @@ const staggerContainer = (stagger, delay) => ({
 })
 
 /** Wraps a group (card grid, alternating row) whose children are `<StaggerItem>`s. */
-export function StaggerGroup({ children, className, stagger = 0.1, delay = 0, amount = 0.25, ...rest }) {
+export function StaggerGroup({ children, className, stagger = 0.2, delay = 0, amount = 0.25, ...rest }) {
   const reduced = useReducedMotion()
   return (
     <motion.div
@@ -97,11 +97,11 @@ export function StaggerGroup({ children, className, stagger = 0.1, delay = 0, am
 }
 
 /** A single staggered child of `<StaggerGroup>`. `x` lets a side-by-side visual slide in from its own side. */
-export function StaggerItem({ children, className, y = 24, x = 0, blur = 0, as = 'div', ...rest }) {
+export function StaggerItem({ children, className, y = 36, x = 0, blur = 0, as = 'div', ...rest }) {
   const reduced = useReducedMotion()
   const Tag = resolveTag(as)
   const hidden = {}
-  const visible = { opacity: 1, transition: { duration: reduced ? 0 : 0.55, ease: EASE } }
+  const visible = { opacity: 1, transition: { duration: reduced ? 0 : 1, ease: EASE } }
   if (!reduced) {
     hidden.opacity = 0
     if (y) { hidden.y = y; visible.y = 0 }
@@ -135,7 +135,7 @@ export function ScrollProgressBar() {
 }
 
 /** Counts up to `value` once it scrolls into view. Reduced motion: jumps straight to the final number. */
-export function CountUp({ value, decimals = 0, className, duration = 1.2 }) {
+export function CountUp({ value, decimals = 0, className, duration = 2.2 }) {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, amount: 0.6 })
   const reduced = useReducedMotion()
