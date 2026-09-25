@@ -4,7 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const { spawn } = require('child_process');
 const config = require('./lib/config');
-const { getEvents, getSourceReport, startScheduler } = require('./lib/normalize');
+const { getEvents, getSourceReport, getSourcesApiReport, startScheduler } = require('./lib/normalize');
 const { LAYERS } = require('./lib/event');
 const { loadMockEvents, MOCK_PATH } = require('./lib/mock');
 const { AMER, LOCAL_RADIUS_KM } = require('./lib/geo');
@@ -62,6 +62,16 @@ app.get('/health', async (req, res, next) => {
 });
 app.get('/api/wards', (req, res) => res.json(wards));
 app.get('/api/wards/:id', (req, res) => { const ward = getWard(req.params.id); return ward ? res.json(ward) : res.status(404).json({ error: 'ward not found' }); });
+
+// GET /api/sources - one row per source (live and planned/disabled), for the frontend's
+// "Data Sources" panel. keyConfigured is a boolean only; no key value is ever included.
+app.get('/api/sources', async (req, res, next) => {
+  try {
+    res.json(await getSourcesApiReport());
+  } catch (err) {
+    next(err);
+  }
+});
 
 // feat/local and feat/globe's cache-backed pipeline (see docs/CONTRACT.md). Additive:
 // the routes above are untouched.

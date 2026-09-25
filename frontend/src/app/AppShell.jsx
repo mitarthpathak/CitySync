@@ -6,6 +6,7 @@ import ThemeButton from './ThemeButton.jsx'
 import GlobalView from './GlobalView.jsx'
 import LocalView from './LocalView.jsx'
 import EventPanel from './EventPanel.jsx'
+import DataSourcesPanel from './DataSourcesPanel.jsx'
 import { useSelectedLocation } from './useSelectedLocation.js'
 import { useReducedMotion } from '../lib/useReducedMotion.js'
 
@@ -25,6 +26,7 @@ export default function AppShell() {
 
   const [location, setLocation] = useSelectedLocation()
   const [selectedEvent, setSelectedEvent] = useState(null)
+  const [showSources, setShowSources] = useState(false)
 
   // The app has its own palette; scope it to <body> while this screen is mounted.
   useEffect(() => {
@@ -43,7 +45,7 @@ export default function AppShell() {
 
   return (
     <div className="cp-app">
-      <Header view={view} location={location} />
+      <Header view={view} location={location} onOpenSources={() => setShowSources(true)} />
       <main className="cp-main">
         <div className="cp-view-stack">
           {/* Always mounted: switching to Local must not tear down (and later re-init) the globe. */}
@@ -75,6 +77,7 @@ export default function AppShell() {
       </main>
 
       <EventPanel event={selectedEvent} onClose={() => setSelectedEvent(null)} />
+      <DataSourcesPanel open={showSources} onClose={() => setShowSources(false)} />
       <ThemeButton className="cp-float-theme" />
 
       {/* A sibling of .cp-view-stack, not inside it: GlobalView's layer is

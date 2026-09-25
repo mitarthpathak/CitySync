@@ -25,11 +25,11 @@ export default function LocalView({ location, onLocationChange, onSelectEvent })
   const { events, radiusKm, lastUpdated } = useEvents({ scope: 'local', lat: location.lat, lng: location.lng })
   const health = useHealth()
   const [wards, setWards] = useState(null)
-  const [layers, setLayers] = useState(() => { try { return JSON.parse(localStorage.getItem('citypulse-local-layers')) || { wards: true, aqi_station: true, waterlogging_risk: true, news: false, exposure: false, traffic: true, civic: true, pois: false, simulated: true } } catch { return {} } })
+  const [layers, setLayers] = useState(() => { try { return JSON.parse(localStorage.getItem('citypulse-local-layers')) || { wards: true, aqi_station: true, waterlogging_risk: true, flood_forecast: true, rain_forecast: true, news: false, exposure: false, traffic: true, civic: true, pois: false, simulated: true } } catch { return {} } })
   useEffect(() => { fetch(`${API_BASE}/api/wards`).then((r) => r.ok ? r.json() : null).then(setWards).catch(() => {}) }, [])
   useEffect(() => { localStorage.setItem('citypulse-local-layers', JSON.stringify(layers)) }, [layers])
   const scoredWards = useMemo(() => wards ? { ...wards, features: wards.features.map((f) => { const relevant = events.filter((e) => e.ward_id === f.properties.ward_id); const hazard = relevant.reduce((n, e) => Math.max(n, e.severity * 20), 0); const exposure = f.properties.facility_count || 0; const impact = Math.round(hazard * Math.max(1, exposure) / 10); return { ...f, properties: { ...f.properties, hazard_score: hazard, exposure_score: exposure, impact, score: Math.min(100, Math.round(hazard * 0.7 + Math.min(exposure, 30))), confidence_score: relevant.some((e) => e.tag === 'SIMULATED') ? 55 : 75 } } }) } : null, [wards, events])
-  const chips = [['wards','Wards'],['aqi_station','AQI Stations'],['waterlogging_risk','Waterlogging Risk'],['news','News'],['exposure','Exposure'],['traffic','Traffic'],['civic','Civic Complaints'],['industrial_context','Industrial'],['historical_baseline','Baseline'],['pois','POIs'],['simulated','Simulated']]
+  const chips = [['wards','Wards'],['aqi_station','AQI Stations'],['waterlogging_risk','Waterlogging Risk'],['flood_forecast','Flood Forecast'],['rain_forecast','Rain Forecast'],['news','News'],['exposure','Exposure'],['traffic','Traffic'],['civic','Civic Complaints'],['industrial_context','Industrial'],['historical_baseline','Baseline'],['pois','POIs'],['simulated','Simulated']]
 
   // Everything below is derived from `events` (this location's real, backend-scoped feed) and
   // `location` - no more hardcoded Amer/Kunda copy left over from the original design mock-up.
@@ -200,7 +200,7 @@ export default function LocalView({ location, onLocationChange, onSelectEvent })
           </article>
         </div>
       </section>
-      <section className="cp-source-strip" aria-label="Source status"><strong>Sources</strong>{[['weather','Open-Meteo weather'],['aq','Open-Meteo AQ'],['waqi','WAQI ground stations'],['gdelt','GDELT media'],['waterlogging','Rain-risk model'],['exposure','OSM exposure'],['historical','Open-Meteo archive'],['tomtom','TomTom traffic'],['context','Static context'],['amer','Amer simulated']].map(([key,name]) => <span key={key} title={`Status: ${health.feeds?.[key] || 'checking'}`}><i className={health.feeds?.[key] === 'sim' || health.feeds?.[key] === 'mock' ? 'is-mock' : health.feeds?.[key] === 'down' || health.feeds?.[key] === 'disabled' ? 'is-down' : ''} />{name} · {health.feeds?.[key] || 'checking'}</span>)}<small>{health.lastUpdated ? `updated ${health.lastUpdated.toLocaleTimeString()}` : 'Background cached'}</small></section>
+      <section className="cp-source-strip" aria-label="Source status"><strong>Sources</strong>{[['weather','Open-Meteo weather'],['aq','Open-Meteo AQ'],['waqi','WAQI ground stations'],['gdelt','GDELT media'],['waterlogging','Rain-risk model'],['flood','GloFAS flood forecast'],['exposure','OSM exposure'],['historical','Open-Meteo archive'],['tomtom','TomTom traffic'],['context','Static context'],['amer','Amer simulated']].map(([key,name]) => <span key={key} title={`Status: ${health.feeds?.[key] || 'checking'}`}><i className={health.feeds?.[key] === 'sim' || health.feeds?.[key] === 'mock' ? 'is-mock' : health.feeds?.[key] === 'down' || health.feeds?.[key] === 'disabled' ? 'is-down' : ''} />{name} · {health.feeds?.[key] || 'checking'}</span>)}<small>{health.lastUpdated ? `updated ${health.lastUpdated.toLocaleTimeString()}` : 'Background cached'}</small></section>
     </div>
   )
 }

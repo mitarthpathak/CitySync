@@ -26,16 +26,18 @@ const ZONE_COLOR = { light: '#2762c9', dark: '#6a9bff' }
 const DEFAULT_ZOOM = 12
 
 // Reuses the app's existing pin shape/markup (see the earlier illustrative LocalMap) as a
-// Leaflet divIcon, so a marker on the real map looks identical to before.
-function pinIcon(tone, { halo = false } = {}) {
+// Leaflet divIcon, so a marker on the real map looks identical to before. `dashed` marks a
+// FORECAST event (ESTIMATED tag: modelled, not measured) with a dashed outline + hollow
+// center, so prediction vs. observation is obvious at a glance without a new pin shape.
+function pinIcon(tone, { halo = false, dashed = false } = {}) {
   return L.divIcon({
     className: 'cp-leaflet-pin',
     html:
-      `<span class="cp-pin cp-pin--${tone}">` +
+      `<span class="cp-pin cp-pin--${tone}${dashed ? ' cp-pin--forecast' : ''}">` +
       (halo ? '<i class="cp-pin-halo"></i><i class="cp-pin-ring"></i>' : '') +
       '<svg class="cp-pin-icon" width="24" height="28" viewBox="0 0 24 28" aria-hidden="true">' +
-      '<path d="M12 27.2 4.46 20.55A11.4 11.4 0 1 1 19.54 20.55Z" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round"></path>' +
-      '<circle cx="12" cy="12" r="3" fill="currentColor"></circle>' +
+      `<path d="M12 27.2 4.46 20.55A11.4 11.4 0 1 1 19.54 20.55Z" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round"${dashed ? ' stroke-dasharray="2.5 2"' : ''}></path>` +
+      `<circle cx="12" cy="12" r="3" fill="${dashed ? 'none' : 'currentColor'}" stroke="currentColor" stroke-width="${dashed ? '1.25' : '0'}"></circle>` +
       '</svg></span>',
     iconSize: [24, 28],
     iconAnchor: [12, 28],
@@ -106,7 +108,7 @@ export default function LocalMap({ center, events = [], radiusKm, wards = null, 
           <Marker
             key={event.id}
             position={[event.lat, event.lng]}
-            icon={pinIcon(toneOf(event.severity))}
+            icon={pinIcon(toneOf(event.severity), { dashed: event.tag === 'ESTIMATED' })}
             eventHandlers={{ click: () => onSelectEvent?.(event) }}
           />
         ))}

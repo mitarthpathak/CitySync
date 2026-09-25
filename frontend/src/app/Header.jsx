@@ -1,5 +1,5 @@
 import { Link, NavLink } from 'react-router-dom'
-import { MapPin } from 'lucide-react'
+import { Database, MapPin } from 'lucide-react'
 import ThemeButton from './ThemeButton.jsx'
 import { useHealth } from './useEvents.js'
 
@@ -34,7 +34,7 @@ function Logo() {
   )
 }
 
-export default function Header({ view, location }) {
+export default function Header({ view, location, onOpenSources }) {
   const tab = ({ isActive }) => (isActive ? 'is-active' : undefined)
   return (
     <header className="cp-header">
@@ -53,6 +53,9 @@ export default function Header({ view, location }) {
         {view === 'local' && location && (
           <span className="cp-place"><MapPin />{location.label}</span>
         )}
+        <button type="button" className="cp-iconbtn" onClick={onOpenSources} aria-label="Data sources">
+          <Database />
+        </button>
         <ThemeButton />
       </div>
     </header>
