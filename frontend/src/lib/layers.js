@@ -5,7 +5,7 @@ import { AirVent, Car, CloudRain, Droplets, FlaskConical, Newspaper, Radio, Sire
 // Order = chip order (highest-trust first after the classic three).
 
 export const LAYERS = [
-  { id: 'alerts', label: 'Official Alerts', Icon: Siren, glyph: 'alert', hint: 'NDMA SACHET (CAP). Fastest, brightest pulse: highest trust.' },
+  { id: 'alerts', label: 'Official Alerts', Icon: Siren, glyph: 'alert', hint: 'Official warnings: NDMA SACHET (India), WMO national met services (Russia, Europe, S. America, N. Africa), GDACS disasters worldwide. Brightest pulse: highest trust.' },
   { id: 'earthquakes', label: 'Earthquakes', Icon: Waves, glyph: 'quake', hint: 'USGS. Ring radius scales with magnitude.' },
   { id: 'weather', label: 'Weather', Icon: CloudRain, glyph: 'weather', hint: 'Open-Meteo current conditions.' },
   { id: 'air_quality', label: 'Air Quality', Icon: AirVent, glyph: 'aq', hint: 'Open-Meteo AQ. Disc colour = US AQI band.' },

@@ -114,7 +114,7 @@ if (require.main === module) {
     console.log(
       config.useMock
         ? '[mode] USE_MOCK=true - serving events.json only, no network calls'
-        : `[mode] live feeds (USGS, Open-Meteo + world city grid, GDELT, NDMA SACHET) + simulated Amer feed; local scope = ${LOCAL_RADIUS_KM} km around ${AMER.lat}, ${AMER.lng}`,
+        : `[mode] live feeds (USGS, Open-Meteo + world city grid, GDELT, NDMA SACHET, WMO SWIC, GDACS) + simulated Amer feed; local scope = ${LOCAL_RADIUS_KM} km around ${AMER.lat}, ${AMER.lng}`,
     );
     loadMockEvents().then((mock) => console.log(`[mock] ${MOCK_PATH} - ${mock.length} valid event(s)`));
     // Populate the slow Overpass exposure snapshot asynchronously on startup; the exposure
