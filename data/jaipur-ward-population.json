@@ -1,10 +1,18 @@
 {
-  "updatedAt": "2026-09-25T02:27:36.307Z",
+  "updatedAt": "2026-09-25T07:21:44.427Z",
   "source": "WorldPop 2020, 1 km UN-adjusted (ind_ppp_2020_1km_Aggregated_UNadj)",
   "sourceUrl": "https://data.worldpop.org/GIS/Population/Global_2000_2020_1km_UNadj/2020/IND/ind_ppp_2020_1km_Aggregated_UNadj.tif",
   "license": "CC BY 4.0 - WorldPop (www.worldpop.org)",
   "method": "Sum of 1 km pixels whose centre falls inside each ward polygon (approximate at ward edges).",
   "wards": [
+    {
+      "ward_id": "achrol-custom",
+      "ward_name": "Achrol / Amity University custom zone (not an official ward)",
+      "population": 82585,
+      "pixels": 225,
+      "lat": 27.15375,
+      "lng": 75.94458
+    },
     {
       "ward_id": "1",
       "ward_name": "Jaipur (M Corp.) (Part) - Ward No.1",

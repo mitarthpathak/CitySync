@@ -1,5 +1,7 @@
 'use strict';
 // One-time/startup cache builder. Never call this from an HTTP route.
 const fs=require('fs'); const path=require('path'); const output=path.join(__dirname,'..','data','jaipur-exposure.json');
-const query='[out:json][timeout:90];(nwr[amenity~"^(hospital|school|bus_station)$"](26.72,75.65,27.12,76.02);nwr[shop=marketplace](26.72,75.65,27.12,76.02););out center tags;';
+// bbox extended past the city (26.72,75.65,27.12,76.02 -> north 27.22) to also cover
+// Achrol / Amity University, the second local point.
+const query='[out:json][timeout:90];(nwr[amenity~"^(hospital|school|bus_station)$"](26.72,75.65,27.22,76.02);nwr[shop=marketplace](26.72,75.65,27.22,76.02););out center tags;';
 (async()=>{try{const r=await fetch('https://overpass-api.de/api/interpreter',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded','Accept':'application/json','User-Agent':'CitySync/1.0 (exposure cache builder)'},body:`data=${encodeURIComponent(query)}`});if(!r.ok)throw new Error(`HTTP ${r.status}`);const data=await r.json();const features=(data.elements||[]).map(e=>({id:`osm-${e.type}-${e.id}`,lat:e.lat??e.center?.lat,lng:e.lon??e.center?.lon,kind:e.tags?.amenity||e.tags?.shop,name:e.tags?.name||null})).filter(x=>Number.isFinite(x.lat)&&Number.isFinite(x.lng));fs.mkdirSync(path.dirname(output),{recursive:true});fs.writeFileSync(output,JSON.stringify({updatedAt:new Date().toISOString(),source:'OpenStreetMap Overpass',features},null,2));console.log(`Cached ${features.length} facilities`)}catch(err){console.warn(`Exposure cache unchanged: ${err.message}`)}})();

@@ -10,6 +10,7 @@ const WORLD_CITIES = require('../config/world-cities');
 // Station coordinates are the published Jaipur monitoring locations; WAQI supplies the
 // measurement. `ward: true` marks the ones inside Jaipur (looked up per-point below).
 const JAIPUR_STATIONS = [
+  { name: 'Achrol / Amity University', lat: 27.1764, lng: 75.9568 },
   { name: 'RIICO Sitapura', lat: 26.785, lng: 75.826 },
   { name: 'Sector-2 Murlipura', lat: 27.033, lng: 75.781 },
   { name: 'Mansarovar Sector-12', lat: 26.856, lng: 75.762 },

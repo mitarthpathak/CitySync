@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-25T03:20:04.217Z",
+  "updatedAt": "2026-09-25T07:18:03.723Z",
   "source": "OpenStreetMap Overpass",
   "features": [
     {
@@ -640,6 +640,13 @@
       "name": "C.B.L. Memorial Holy Family Hospital"
     },
     {
+      "id": "osm-node-7030539374",
+      "lat": 27.15357,
+      "lng": 75.7259669,
+      "kind": "hospital",
+      "name": "J.S.Mahila and General Hospital and Research Centre"
+    },
+    {
       "id": "osm-node-7030551132",
       "lat": 26.9009951,
       "lng": 75.8267596,
@@ -785,6 +792,13 @@
       "lng": 75.7726796,
       "kind": "hospital",
       "name": "Jha Hospital"
+    },
+    {
+      "id": "osm-node-7034978704",
+      "lat": 27.1649959,
+      "lng": 75.7324609,
+      "kind": "hospital",
+      "name": "S S Mahila and General Hospital"
     },
     {
       "id": "osm-node-7034998849",
@@ -1060,6 +1074,13 @@
       "name": "Diwakar Orthopedic and General Hospital"
     },
     {
+      "id": "osm-node-7038140721",
+      "lat": 27.1433081,
+      "lng": 75.7273945,
+      "kind": "hospital",
+      "name": "Chhoti Devi Memorial Hospital"
+    },
+    {
       "id": "osm-node-7038143732",
       "lat": 26.9229847,
       "lng": 75.7236005,
@@ -1086,6 +1107,13 @@
       "lng": 75.8130455,
       "kind": "hospital",
       "name": "Kcj Diagnostic and Research Center"
+    },
+    {
+      "id": "osm-node-7038208939",
+      "lat": 27.1433129,
+      "lng": 75.7298554,
+      "kind": "hospital",
+      "name": "Barala Hospital and Research Centre"
     },
     {
       "id": "osm-node-7038265808",
@@ -1466,6 +1494,13 @@
       "name": "Siddham E N T Center"
     },
     {
+      "id": "osm-node-7040179069",
+      "lat": 27.1923547,
+      "lng": 75.9545105,
+      "kind": "hospital",
+      "name": "National Institute Of Medical Sciences Hospital"
+    },
+    {
       "id": "osm-node-7040181512",
       "lat": 26.8511271,
       "lng": 75.8070253,
@@ -1506,6 +1541,13 @@
       "lng": 75.7708476,
       "kind": "hospital",
       "name": "Dr. Goyal's Path Lab and Imaging Centre"
+    },
+    {
+      "id": "osm-node-7040270437",
+      "lat": 27.1575997,
+      "lng": 75.7265174,
+      "kind": "hospital",
+      "name": "Sevayatan Hospital"
     },
     {
       "id": "osm-node-7040281162",
@@ -1576,6 +1618,13 @@
       "lng": 75.7681916,
       "kind": "hospital",
       "name": "Jee Hospital and Research Centre"
+    },
+    {
+      "id": "osm-node-7040397011",
+      "lat": 27.1731739,
+      "lng": 75.7296181,
+      "kind": "hospital",
+      "name": "Chomun Mahila and Eye Hospital"
     },
     {
       "id": "osm-node-7040401357",
@@ -1858,11 +1907,25 @@
       "name": "Government Hospital"
     },
     {
+      "id": "osm-node-7694895077",
+      "lat": 27.1622261,
+      "lng": 75.7244958,
+      "kind": "hospital",
+      "name": "Lata Kayakalp Physiotherapy and Ayurvedic Hospital"
+    },
+    {
       "id": "osm-node-7694895082",
       "lat": 27.087344,
       "lng": 75.943903,
       "kind": "hospital",
       "name": "Aastha Dama Hospital"
+    },
+    {
+      "id": "osm-node-7694895090",
+      "lat": 27.164571,
+      "lng": 75.7234946,
+      "kind": "hospital",
+      "name": "Ram ENT Hospital"
     },
     {
       "id": "osm-node-7694895092",
@@ -1872,6 +1935,118 @@
       "name": "Anant Hospital"
     },
     {
+      "id": "osm-node-7694895093",
+      "lat": 27.1578048,
+      "lng": 75.72583,
+      "kind": "hospital",
+      "name": "Balaji Fracture Hospital"
+    },
+    {
+      "id": "osm-node-7694895095",
+      "lat": 27.1559455,
+      "lng": 75.7243586,
+      "kind": "hospital",
+      "name": "Jankalyan Hospital"
+    },
+    {
+      "id": "osm-node-7694895097",
+      "lat": 27.1570258,
+      "lng": 75.7266221,
+      "kind": "hospital",
+      "name": "Anjani Hospital"
+    },
+    {
+      "id": "osm-node-7694895098",
+      "lat": 27.1522057,
+      "lng": 75.7274845,
+      "kind": "hospital",
+      "name": "Balaji Mahila & Fertility Hospital"
+    },
+    {
+      "id": "osm-node-7694895102",
+      "lat": 27.1633195,
+      "lng": 75.7227808,
+      "kind": "hospital",
+      "name": "Kapoor Hospital"
+    },
+    {
+      "id": "osm-node-7694895107",
+      "lat": 27.1618614,
+      "lng": 75.7247333,
+      "kind": "hospital",
+      "name": "Arya Hospital"
+    },
+    {
+      "id": "osm-node-7694895111",
+      "lat": 27.1570093,
+      "lng": 75.7237421,
+      "kind": "hospital",
+      "name": "Alex Ayush Ayurvedic Hub and Hospital"
+    },
+    {
+      "id": "osm-node-7694895122",
+      "lat": 27.1722289,
+      "lng": 75.7279798,
+      "kind": "hospital",
+      "name": "Saini Hospital"
+    },
+    {
+      "id": "osm-node-7694895125",
+      "lat": 27.1769884,
+      "lng": 75.7288495,
+      "kind": "hospital",
+      "name": "MJF Hospital"
+    },
+    {
+      "id": "osm-node-7694895128",
+      "lat": 27.1717034,
+      "lng": 75.7267171,
+      "kind": "hospital",
+      "name": "City Hospital"
+    },
+    {
+      "id": "osm-node-7694895129",
+      "lat": 27.156382,
+      "lng": 75.72497,
+      "kind": "hospital",
+      "name": "R.K. Fracture Hospital and Trauma Centre"
+    },
+    {
+      "id": "osm-node-7694895131",
+      "lat": 27.1433413,
+      "lng": 75.7289475,
+      "kind": "hospital",
+      "name": "Tokas Gastro Hospital"
+    },
+    {
+      "id": "osm-node-7694895132",
+      "lat": 27.165107,
+      "lng": 75.722436,
+      "kind": "hospital",
+      "name": "Chomu Janana and General Hospital"
+    },
+    {
+      "id": "osm-node-7694895137",
+      "lat": 27.1713552,
+      "lng": 75.7282155,
+      "kind": "hospital",
+      "name": "Om Child Hospital"
+    },
+    {
+      "id": "osm-node-7694895140",
+      "lat": 27.1334409,
+      "lng": 75.960943,
+      "kind": "hospital",
+      "name": "Shree Shyam Eye Hospital"
+    },
+    {
+      "id": "osm-node-7694895141",
+      "lat": 27.146017,
+      "lng": 75.726338,
+      "kind": "hospital",
+      "name": "Choudhary Zenana Hospital"
+    },
+    {
       "id": "osm-node-7694895142",
       "lat": 27.018856,
       "lng": 75.999834,
@@ -1879,11 +2054,67 @@
       "name": "Tonk Dental & Facial Trauma Centre"
     },
     {
+      "id": "osm-node-7694895145",
+      "lat": 27.169341,
+      "lng": 75.718947,
+      "kind": "hospital",
+      "name": "Yadav Eye Hospital"
+    },
+    {
+      "id": "osm-node-7694895146",
+      "lat": 27.1754748,
+      "lng": 75.7404071,
+      "kind": "hospital",
+      "name": "Sanjeevani Hospital"
+    },
+    {
+      "id": "osm-node-7694895148",
+      "lat": 27.1563372,
+      "lng": 75.7244195,
+      "kind": "hospital",
+      "name": "Shiv Dhara Hospital"
+    },
+    {
+      "id": "osm-node-7694895155",
+      "lat": 27.1652891,
+      "lng": 75.7311771,
+      "kind": "hospital",
+      "name": "Gurukripa Hospital"
+    },
+    {
+      "id": "osm-node-7694895156",
+      "lat": 27.1603051,
+      "lng": 75.7245362,
+      "kind": "hospital",
+      "name": "Sharma Hospital"
+    },
+    {
+      "id": "osm-node-7694895157",
+      "lat": 27.1652398,
+      "lng": 75.7175441,
+      "kind": "hospital",
+      "name": "Shiv Hospital"
+    },
+    {
+      "id": "osm-node-7694895158",
+      "lat": 27.149668,
+      "lng": 75.725758,
+      "kind": "hospital",
+      "name": "Dr. C M Chopra Hospital and Heart Care Centre"
+    },
+    {
       "id": "osm-node-7694895164",
       "lat": 27.0377054,
       "lng": 75.8903875,
       "kind": "hospital",
       "name": "GP Hospital"
+    },
+    {
+      "id": "osm-node-7694895166",
+      "lat": 27.150529,
+      "lng": 75.727644,
+      "kind": "hospital",
+      "name": "Bansal Hospital"
     },
     {
       "id": "osm-node-7694895169",
@@ -3146,11 +3377,25 @@
       "name": null
     },
     {
+      "id": "osm-node-11693040780",
+      "lat": 27.1774261,
+      "lng": 75.7388706,
+      "kind": "hospital",
+      "name": "kalpna hospital"
+    },
+    {
       "id": "osm-node-11697042114",
       "lat": 26.9448303,
       "lng": 75.7149263,
       "kind": "school",
       "name": "SG International School"
+    },
+    {
+      "id": "osm-node-11697426685",
+      "lat": 27.1687155,
+      "lng": 75.7240154,
+      "kind": "bus_station",
+      "name": "bus station"
     },
     {
       "id": "osm-node-11968824969",
@@ -3762,11 +4007,60 @@
       "name": "SCHOLARS PUBLIC SCHOOL GROUND"
     },
     {
+      "id": "osm-way-1241963508",
+      "lat": 27.1943762,
+      "lng": 75.881921,
+      "kind": "school",
+      "name": "Govt Sen Sec School Manpura Machedi"
+    },
+    {
       "id": "osm-way-1257407342",
       "lat": 26.9575532,
       "lng": 75.6998977,
       "kind": "school",
       "name": "BASKETBALL GROUND"
+    },
+    {
+      "id": "osm-way-1258294315",
+      "lat": 27.1550182,
+      "lng": 75.7245854,
+      "kind": "school",
+      "name": "Asian public school"
+    },
+    {
+      "id": "osm-way-1258296000",
+      "lat": 27.1572157,
+      "lng": 75.7045536,
+      "kind": "school",
+      "name": "govt. school ground"
+    },
+    {
+      "id": "osm-way-1258296053",
+      "lat": 27.1565048,
+      "lng": 75.7042149,
+      "kind": "school",
+      "name": "govt. school"
+    },
+    {
+      "id": "osm-way-1258296576",
+      "lat": 27.1584364,
+      "lng": 75.7073877,
+      "kind": "school",
+      "name": "New shine school"
+    },
+    {
+      "id": "osm-way-1258305542",
+      "lat": 27.1697021,
+      "lng": 75.7164856,
+      "kind": "school",
+      "name": "Aadarsh vidya mindir"
+    },
+    {
+      "id": "osm-way-1258307465",
+      "lat": 27.1748989,
+      "lng": 75.7155825,
+      "kind": "school",
+      "name": "Prakaash public school"
     },
     {
       "id": "osm-way-1421893728",

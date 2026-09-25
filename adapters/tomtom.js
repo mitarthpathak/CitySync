@@ -6,6 +6,7 @@ const { makeEvent } = require('../lib/event');
 const H = require('../lib/heuristics');
 
 const JAIPUR_POINTS = [
+  ['NH-11C Kant Kalwar (Amity)', 27.1764, 75.9568],
   ['Amer Fort Road', 26.9855, 75.8513],
   ['Delhi Road', 26.9483, 75.8378],
   ['Tonk Road', 26.8707, 75.793],
