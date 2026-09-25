@@ -69,6 +69,12 @@ function RawFields({ raw }) {
   )
 }
 
+function ScoreBars({ raw }) {
+  const scores = [['Hazard', raw?.hazard_score], ['Exposure', raw?.exposure_score], ['Impact', raw?.impact], ['Confidence', raw?.confidence_score]]
+  if (!scores.some(([, value]) => Number.isFinite(value))) return null
+  return <div className="cp-score-bars">{scores.map(([label, value]) => <div key={label}><span>{label} <b>{Math.min(100, Math.round(value || 0))}</b></span><i><em style={{ width: `${Math.min(100, Math.max(0, value || 0))}%` }} /></i></div>)}</div>
+}
+
 /** The event's honest trust tag. Non-live data gets a loud badge; live data a quiet one. */
 function TagBadge({ event }) {
   const tag = tagOf(event)
@@ -214,6 +220,7 @@ export default function EventPanel({ event, onClose }) {
             </dl>
 
             <p className="cp-label cp-panel-rawlabel">Details</p>
+            <ScoreBars raw={event.raw} />
             <RawFields raw={event.raw} />
           </motion.div>
         </div>

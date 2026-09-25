@@ -6,16 +6,20 @@ const { openMeteoTimeToIso } = require('../lib/time');
 const { describeWeatherCode, severityFromTemperature } = require('./weather');
 const { bandFromAqi } = require('./airQuality');
 const CITIES = require('../config/world-cities');
+const config = require('../lib/config');
 
 // Open-Meteo takes comma-separated coordinate lists and answers with an array in the same
 // order, so the whole grid is ONE weather request + ONE air-quality request.
 const LATS = CITIES.map((c) => c.lat).join(',');
 const LNGS = CITIES.map((c) => c.lng).join(',');
 
+// hourly=precipitation_probability is the same request the weather event already needed -
+// no separate "rain forecast" source, just this one extra hourly field (Tier 1 item 4).
 const WEATHER_URL =
   'https://api.open-meteo.com/v1/forecast' +
   `?latitude=${LATS}&longitude=${LNGS}` +
   '&current=temperature_2m,weather_code,wind_speed_10m' +
+  '&hourly=precipitation_probability,precipitation' +
   '&daily=temperature_2m_max&forecast_days=1&timezone=auto';
 
 const AQ_URL =
@@ -82,6 +86,48 @@ async function fetchCityWeather() {
       );
     } catch {
       /* one bad city must not drop the grid */
+    }
+
+    // Predictive: a distinct "rain_forecast" event (ESTIMATED, never REAL_LIVE - see
+    // lib/event.js's DEFAULT_TAG) for cities with a high near-term rain probability.
+    // Uses the very same response, no extra request.
+    const hourly = data?.hourly;
+    if (hourly?.time && hourly?.precipitation_probability) {
+      const now = Date.now();
+      const windowMs = config.rainForecast.windowHours * 3600000;
+      const idx = hourly.time.map((t, j) => (Date.parse(t) >= now && Date.parse(t) < now + windowMs ? j : -1)).filter((j) => j >= 0);
+      if (idx.length) {
+        const avgProbability = idx.reduce((sum, j) => sum + (hourly.precipitation_probability[j] || 0), 0) / idx.length;
+        const totalRain = idx.reduce((sum, j) => sum + (hourly.precipitation?.[j] || 0), 0);
+        if (avgProbability >= config.rainForecast.probabilityThreshold) {
+          try {
+            events.push(
+              makeEvent({
+                id: `rain-forecast-${slug(city.name)}-${current.time}`,
+                type: 'rain_forecast',
+                tag: 'ESTIMATED',
+                sourceUrl: `https://open-meteo.com/en/docs#latitude=${city.lat}&longitude=${city.lng}`,
+                title: `${city.name}: ${Math.round(avgProbability)}% chance of rain in the next ${config.rainForecast.windowHours}h`,
+                lat: city.lat,
+                lng: city.lng,
+                timestamp: openMeteoTimeToIso(current.time, data.utc_offset_seconds),
+                severity: avgProbability >= 90 ? 3 : 2,
+                source: 'Open-Meteo forecast',
+                raw: {
+                  city: city.name,
+                  country: city.country,
+                  probability_pct: Math.round(avgProbability),
+                  window_hours: config.rainForecast.windowHours,
+                  expected_mm: Number(totalRain.toFixed(1)),
+                  note: 'FORECAST probability, not observed rain. A possibility, not a confirmed prediction.',
+                },
+              }),
+            );
+          } catch {
+            /* skip */
+          }
+        }
+      }
     }
   });
 

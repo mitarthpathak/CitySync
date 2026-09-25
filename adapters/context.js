@@ -1,0 +1,6 @@
+'use strict';
+const {makeEvent}=require('../lib/event');
+const INDUSTRIAL=[['VKIA industrial context',27.029,75.776],['Sitapura industrial context',26.783,75.828],['Kaladera industrial context',27.417,75.515]];
+const POIS=[['Amer Fort',26.9855,75.8513],['Maota Lake',26.9873,75.8538],['Jaigarh Fort',26.9957,75.8525],['NH-11C Amer corridor',26.999,75.87]];
+function fetchContext(){const now=new Date();const weekend=[0,6].includes(now.getDay());const hour=now.getHours();const multiplier=(weekend?1.3:1)*(hour>=10&&hour<=17?1.25:.65);return[...INDUSTRIAL.map(([title,lat,lng])=>makeEvent({id:`industrial-${title}`,type:'event',layer:'industrial_context',tag:'REAL_STATIC',sourceUrl:null,title,lat,lng,timestamp:now.toISOString(),severity:1,source:'CityPulse static context',raw:{note:'Industrial context only; not a pollution measurement.'}})),...POIS.map(([title,lat,lng])=>makeEvent({id:`poi-${title}`,type:'event',layer:'pois',tag:'ESTIMATED',sourceUrl:'https://www.tourism.rajasthan.gov.in/',title:`${title}: estimated visitor pressure`,lat,lng,timestamp:now.toISOString(),severity:multiplier>=1.4?3:2,source:'CityPulse tourism heuristic',raw:{crowd_multiplier:Number(multiplier.toFixed(2)),basis:'time-of-day and weekend heuristic; not measured data.'}}))]}
+module.exports={fetchContext};

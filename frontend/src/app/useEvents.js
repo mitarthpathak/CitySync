@@ -13,8 +13,7 @@ const MIN_REFETCH_GAP_MS = 10_000 // skip a duplicate fetch if the tab was hidde
 function buildUrl({ scope, lat, lng }) {
   const url = new URL(`${API_BASE}/events`)
   url.searchParams.set('scope', scope)
-  // The backend's local scope is currently fixed to Amer; lat/lng are sent for when it starts
-  // honouring them. Until then, filterToLocation() below does the same job client-side.
+  // The backend centers its local-scope radius on this point (defaults to Amer without it).
   if (scope === 'local' && Number.isFinite(lat) && Number.isFinite(lng)) {
     url.searchParams.set('lat', lat)
     url.searchParams.set('lng', lng)
@@ -22,6 +21,8 @@ function buildUrl({ scope, lat, lng }) {
   return url.toString()
 }
 
+// The backend already scopes to this radius server-side; this is just a defensive
+// second pass (e.g. against a stale cached response) and should normally be a no-op.
 function filterToLocation(events, scope, lat, lng) {
   if (scope !== 'local' || !Number.isFinite(lat) || !Number.isFinite(lng)) return events
   return events.filter((e) => haversineKm(lat, lng, e.lat, e.lng) <= LOCAL_RADIUS_KM)

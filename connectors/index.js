@@ -8,4 +8,7 @@ module.exports = [
   require('./mosdac'),
   require('./bhuvan'),
   require('./iudx'),
+  require('./worldpop'),
+  require('./mappls'),
+  require('./jctslPtal'),
 ];

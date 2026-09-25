@@ -287,6 +287,15 @@ body.cp-body {
 .cp-mapcard { padding: 22px; }
 .cp-mapcard .cp-card-head { margin-bottom: 21px; }
 .cp-map { position: relative; overflow: hidden; aspect-ratio: 878 / 327; background: var(--cp-surface); }
+.cp-layerchips { display:flex; flex-wrap:wrap; gap:6px; margin:-8px 0 14px; }
+.cp-layerchips .cp-chip { height:26px; font-size:10px; }
+.cp-layerchips small { color:var(--cp-muted); font-variant-numeric:tabular-nums; }
+.cp-source-dot { width:6px; height:6px; border-radius:50%; background:var(--cp-green); display:inline-block; }
+.cp-source-dot.is-mock, .cp-source-strip .is-mock { background:var(--cp-amber); }
+.cp-source-strip .is-down { background:var(--cp-crimson); }
+.cp-ward-attribution { position:absolute; bottom:3px; left:4px; z-index:500; margin:0; padding:2px 5px; background:color-mix(in srgb,var(--cp-card) 85%,transparent); font-size:9px; color:var(--cp-muted); }
+.cp-source-strip { display:flex; align-items:center; flex-wrap:wrap; gap:10px; margin:10px 0 28px; padding:10px 12px; border:1px solid var(--cp-line); font-size:10px; color:var(--cp-muted); }
+.cp-source-strip strong { color:var(--cp-fg); text-transform:uppercase; letter-spacing:.08em; font-size:9px; }.cp-source-strip span { display:inline-flex; align-items:center; gap:4px; }.cp-source-strip i { width:6px; height:6px; border-radius:50%; background:var(--cp-green); }.cp-source-strip small { margin-left:auto; }
 .cp-leaflet { position: absolute; inset: 0; width: 100%; height: 100%; background: var(--cp-surface); font-family: inherit; }
 
 /* Leaflet's own chrome (zoom buttons, attribution), restyled to match the app rather than
@@ -309,6 +318,7 @@ body.cp-body {
 .cp-pin--blue { color: var(--cp-blue); }
 .cp-pin--amber { color: var(--cp-amber); }
 .cp-pin--crimson { color: var(--cp-crimson); }
+.cp-pin--forecast { opacity: 0.8; } /* modelled, not measured - a touch lighter, matching its dashed outline */
 .cp-pin-halo, .cp-pin-ring { position: absolute; left: 12px; top: 14px; border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; }
 .cp-pin-halo { width: 60px; height: 60px; background: color-mix(in srgb, var(--cp-blue) 5%, transparent); }
 .cp-pin-ring { width: 40px; height: 40px; border: 1px solid color-mix(in srgb, var(--cp-blue) 60%, transparent); }
@@ -429,6 +439,28 @@ body.cp-body {
 .cp-panel-raw dd { margin: 3px 0 0; font-size: 13px; color: var(--cp-fg); word-break: break-word; }
 .cp-panel-raw pre { margin: 3px 0 0; padding: 8px; border: 1px solid var(--cp-line); border-radius: 4px; background: var(--cp-surface); font-size: 11px; white-space: pre-wrap; word-break: break-word; }
 .cp-panel-empty { margin: 14px 0 0; font-size: 12px; color: var(--cp-muted); }
+.cp-score-bars { display:grid; gap:10px; margin:14px 0 18px; }.cp-score-bars span { display:flex; justify-content:space-between; font-size:11px; color:var(--cp-muted); }.cp-score-bars b { color:var(--cp-fg); }.cp-score-bars i { display:block; height:5px; margin-top:5px; background:var(--cp-track); }.cp-score-bars em { display:block; height:100%; background:var(--cp-amber); }
+
+/* ---- data sources panel (judge-facing "what this is built on") -------------------- */
+.cp-sources-panel { width: min(460px, 100%); }
+.cp-sources-group { margin-top: 22px; }
+.cp-sources-category { margin-bottom: 10px; }
+.cp-sources-list { display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.cp-sources-row { padding: 10px 12px; border: 1px solid var(--cp-line); border-radius: 6px; background: var(--cp-surface); }
+.cp-sources-row-top { display: flex; align-items: center; gap: 8px; }
+.cp-sources-row-top strong { flex: 1; font-size: 13px; font-weight: 600; }
+.cp-sources-dot { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--cp-muted); }
+.cp-sources-dot.is-live { background: var(--cp-green); }
+.cp-sources-dot.is-mock { background: var(--cp-amber); }
+.cp-sources-dot.is-down { background: var(--cp-crimson); }
+.cp-sources-dot.is-disabled { background: var(--cp-line); }
+.cp-sources-status { font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--cp-muted); }
+.cp-sources-row-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 6px; font-size: 11px; color: var(--cp-muted); }
+.cp-sources-key { padding: 1px 6px; border-radius: 999px; border: 1px solid var(--cp-line); }
+.cp-sources-key[data-configured='true'] { color: var(--cp-green); border-color: color-mix(in srgb, var(--cp-green) 40%, transparent); }
+.cp-sources-docs { display: inline-flex; align-items: center; gap: 4px; color: var(--cp-blue); }
+.cp-sources-docs svg { width: 11px; height: 11px; }
+.cp-sources-reason { margin: 6px 0 0; font-size: 11px; line-height: 15px; color: var(--cp-muted); }
 
 /* ---- responsive --------------------------------------------------------- */
 @media (max-width: 1100px) {
@@ -461,6 +493,8 @@ body.cp-body {
   .cp-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .cp-viewtoggle a { padding: 0 9px; }
   .cp-place { display: none; }
+  .cp-header { padding: 0 12px; }
+  .cp-header-right { gap: 4px; } /* the data-sources button added a 3rd icon; keep them from overflowing */
   .cp-locpicker-row { gap: 8px; }
   .cp-locselect { flex: 1; min-width: 0; }
   .cp-locradius { width: 100%; }

@@ -1,0 +1,100 @@
+[
+  {
+    "name": "Tonk Road / Tonk Phatak",
+    "confidence": "reported",
+    "lat": 26.8676272,
+    "lng": 75.8050489,
+    "geocoder": "Nominatim (one-time build cache)"
+  },
+  {
+    "name": "Ajmeri Gate, Jaipur",
+    "confidence": "reported",
+    "lat": 26.9172212,
+    "lng": 75.8168184,
+    "geocoder": "Nominatim (one-time build cache)"
+  },
+  {
+    "name": "Rambagh, Jaipur",
+    "confidence": "reported",
+    "lat": 26.8948036,
+    "lng": 75.8086632,
+    "geocoder": "Nominatim (one-time build cache)"
+  },
+  {
+    "name": "Raja Park, Jaipur",
+    "confidence": "reported",
+    "lat": 26.8966396,
+    "lng": 75.8271072,
+    "geocoder": "Nominatim (one-time build cache)"
+  },
+  {
+    "name": "Jawahar Nagar, Jaipur",
+    "confidence": "reported",
+    "lat": 26.8930427,
+    "lng": 75.8361965,
+    "geocoder": "Nominatim (one-time build cache)"
+  },
+  {
+    "name": "Gopalpura, Jaipur",
+    "confidence": "reported",
+    "lat": 26.8738221,
+    "lng": 75.7780496,
+    "geocoder": "Nominatim (one-time build cache)"
+  },
+  {
+    "name": "Jagatpura Road, Jaipur",
+    "confidence": "reported",
+    "lat": 26.8351925,
+    "lng": 75.83485,
+    "geocoder": "Nominatim (one-time build cache)"
+  },
+  {
+    "name": "JLN Marg, Jaipur",
+    "confidence": "reported",
+    "lat": 26.8632514,
+    "lng": 75.8070665,
+    "geocoder": "Nominatim (one-time build cache)"
+  },
+  {
+    "name": "Bagru, Jaipur",
+    "confidence": "reported",
+    "lat": 26.8087953,
+    "lng": 75.5423119,
+    "geocoder": "Nominatim (one-time build cache)"
+  },
+  {
+    "name": "SMS Hospital, Jaipur",
+    "confidence": "reported",
+    "lat": 26.9806352,
+    "lng": 75.7613544,
+    "geocoder": "Nominatim (one-time build cache)"
+  },
+  {
+    "name": "Amer, Jaipur",
+    "confidence": "reported",
+    "lat": 26.9885137,
+    "lng": 75.8594847,
+    "geocoder": "Nominatim (one-time build cache)"
+  },
+  {
+    "name": "Sanganer Market, Jaipur",
+    "confidence": "lower",
+    "lat": 26.859618,
+    "lng": 75.75361,
+    "geocoder": "Nominatim (one-time build cache)"
+  },
+  {
+    "name": "Malviya Nagar, Jaipur",
+    "confidence": "lower",
+    "lat": 26.8593668,
+    "lng": 75.8098088,
+    "geocoder": "Nominatim (one-time build cache)"
+  },
+  {
+    "name": "Barkat Nagar, Jaipur",
+    "confidence": "lower",
+    "lat": 26.8769857,
+    "lng": 75.7926809,
+    "geocoder": "Nominatim (one-time build cache)"
+  }
+]

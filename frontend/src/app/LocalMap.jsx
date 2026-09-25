@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef } from 'react'
 import L from 'leaflet'
-import { Circle, MapContainer, Marker, TileLayer } from 'react-leaflet'
+import { Circle, GeoJSON, MapContainer, Marker, TileLayer, Tooltip } from 'react-leaflet'
 import { Layers, LocateFixed } from 'lucide-react'
 import { toneOf } from '../lib/severity.js'
 import { useReducedMotion } from '../lib/useReducedMotion.js'
@@ -26,16 +26,18 @@ const ZONE_COLOR = { light: '#2762c9', dark: '#6a9bff' }
 const DEFAULT_ZOOM = 12
 
 // Reuses the app's existing pin shape/markup (see the earlier illustrative LocalMap) as a
-// Leaflet divIcon, so a marker on the real map looks identical to before.
-function pinIcon(tone, { halo = false } = {}) {
+// Leaflet divIcon, so a marker on the real map looks identical to before. `dashed` marks a
+// FORECAST event (ESTIMATED tag: modelled, not measured) with a dashed outline + hollow
+// center, so prediction vs. observation is obvious at a glance without a new pin shape.
+function pinIcon(tone, { halo = false, dashed = false } = {}) {
   return L.divIcon({
     className: 'cp-leaflet-pin',
     html:
-      `<span class="cp-pin cp-pin--${tone}">` +
+      `<span class="cp-pin cp-pin--${tone}${dashed ? ' cp-pin--forecast' : ''}">` +
       (halo ? '<i class="cp-pin-halo"></i><i class="cp-pin-ring"></i>' : '') +
       '<svg class="cp-pin-icon" width="24" height="28" viewBox="0 0 24 28" aria-hidden="true">' +
-      '<path d="M12 27.2 4.46 20.55A11.4 11.4 0 1 1 19.54 20.55Z" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round"></path>' +
-      '<circle cx="12" cy="12" r="3" fill="currentColor"></circle>' +
+      `<path d="M12 27.2 4.46 20.55A11.4 11.4 0 1 1 19.54 20.55Z" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round"${dashed ? ' stroke-dasharray="2.5 2"' : ''}></path>` +
+      `<circle cx="12" cy="12" r="3" fill="${dashed ? 'none' : 'currentColor'}" stroke="currentColor" stroke-width="${dashed ? '1.25' : '0'}"></circle>` +
       '</svg></span>',
     iconSize: [24, 28],
     iconAnchor: [12, 28],
@@ -50,7 +52,7 @@ function pinIcon(tone, { halo = false } = {}) {
  * Theme (light/dark tiles) is read from the shared theme context, same as GlobeView, so
  * both children stay in sync without the parent having to pass it down explicitly.
  */
-export default function LocalMap({ center, events = [], radiusKm, onSelectEvent }) {
+export default function LocalMap({ center, events = [], radiusKm, wards = null, layers = {}, onSelectEvent }) {
   const { dark } = useTheme()
   const reduced = useReducedMotion()
   const theme = dark ? 'dark' : 'light'
@@ -70,6 +72,14 @@ export default function LocalMap({ center, events = [], radiusKm, onSelectEvent 
   }, [center.lat, center.lng, reduced])
 
   const recenter = () => mapRef.current?.flyTo([center.lat, center.lng], DEFAULT_ZOOM, { animate: !reduced })
+  const wardStyle = (feature) => {
+    const score = Number(feature.properties.score || 0)
+    return { color: dark ? '#92b5ff' : '#245bb9', weight: 0.7, opacity: 0.55, fillColor: score >= 70 ? '#d34848' : score >= 35 ? '#d69b30' : '#3f80d8', fillOpacity: 0.12 + Math.min(score, 80) / 650 }
+  }
+  const onEachWard = (feature, layer) => {
+    layer.bindTooltip(`${feature.properties.ward_name} · score ${feature.properties.score ?? 0}`, { sticky: true })
+    layer.on({ click: () => onSelectEvent?.({ id: `ward-${feature.properties.ward_id}`, type: 'civic', title: feature.properties.ward_name, lat: center.lat, lng: center.lng, timestamp: new Date().toISOString(), severity: Math.max(1, Math.ceil((feature.properties.score || 0) / 25)), source: feature.properties.official ? 'OpenCity.in — Jaipur Municipal Corporation Wards Map' : 'CityPulse custom zone', isSimulated: false, layer: 'wards', tag: 'REAL_STATIC', sourceUrl: 'https://data.opencity.in/dataset/jaipur-municipal-corporation-wards-map', ward_id: feature.properties.ward_id, raw: { hazard_score: feature.properties.hazard_score || 0, exposure_score: feature.properties.exposure_score || 0, impact: feature.properties.impact || 0, confidence_score: feature.properties.confidence_score || 0, facility_count: feature.properties.facility_count || 0, note: feature.properties.official ? 'Official ward geometry.' : 'Custom Amer zone, not an official ward.' } }) })
+  }
 
   return (
     <div className="cp-map">
@@ -92,15 +102,19 @@ export default function LocalMap({ center, events = [], radiusKm, onSelectEvent 
 
         <Marker position={[center.lat, center.lng]} icon={centerIcon} />
 
-        {events.map((event) => (
+        {layers.wards !== false && wards && <GeoJSON data={wards} style={wardStyle} onEachFeature={onEachWard} />}
+
+        {events.filter((event) => layers[event.layer] !== false && (layers.simulated !== false || event.tag !== 'SIMULATED')).map((event) => (
           <Marker
             key={event.id}
             position={[event.lat, event.lng]}
-            icon={pinIcon(toneOf(event.severity))}
+            icon={pinIcon(toneOf(event.severity), { dashed: event.tag === 'ESTIMATED' })}
             eventHandlers={{ click: () => onSelectEvent?.(event) }}
           />
         ))}
       </MapContainer>
+
+      {layers.wards !== false && <p className="cp-ward-attribution">OpenCity.in — Jaipur Municipal Corporation Wards Map</p>}
 
       {events.length === 0 && (
         <p className="cp-map-empty">No active signals within {radiusKm} km of this location.</p>
