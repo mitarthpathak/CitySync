@@ -7,10 +7,9 @@ import { useReducedMotion } from '../lib/useReducedMotion'
 // The team. Edit here: `linkedin` is a full profile URL; leave it '' to hide that member's link.
 const MEMBERS = [
   { name: 'Mitarth Pathak', role: 'Engineering, UI & 3D', linkedin: '' },
-  { name: 'Navneet Singh', role: 'Technology & AI', linkedin: '' },
-  { name: 'Gaurav Soni', role: 'Design & Experience', linkedin: '' },
   { name: 'Deep Panchal', role: 'Product & Vision', linkedin: '' },
-  { name: 'Nooren Qureshi', role: 'Research & Community', linkedin: '' },
+  { name: 'Navneet Singh', role: 'Technology & AI', linkedin: '' },
+  { name: 'Jayant Katariya', role: 'Design & Experience', linkedin: '' },
 ]
 
 /** "About us" dialog: what CitySync is, and who builds it. */
