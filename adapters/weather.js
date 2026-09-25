@@ -56,6 +56,7 @@ async function fetchWeather() {
       severity: Math.max(conditionSeverity, severityFromTemperature(tempC)),
       source: 'Open-Meteo',
       isSimulated: false,
+      sourceUrl: URL,
       raw: {
         weather_code: current.weather_code,
         temperature_c: tempC,

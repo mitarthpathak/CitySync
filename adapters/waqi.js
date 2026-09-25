@@ -45,7 +45,7 @@ async function fetchStation(station) {
     type: 'air_quality',
     layer: 'aqi_station',
     tag: 'REAL_LIVE',
-    sourceUrl: 'https://aqicn.org/',
+    sourceUrl: waqi.data.city?.url || 'https://aqicn.org/',
     ward_id: ward?.properties.ward_id ?? null,
     title: `${station.name}: AQI ${aqi}${lowConfidence ? ' (low confidence)' : ''}`,
     lat: station.lat,

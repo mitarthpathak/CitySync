@@ -9,6 +9,8 @@ const { LAYERS } = require('./lib/event');
 const { loadMockEvents, MOCK_PATH } = require('./lib/mock');
 const { AMER, LOCAL_RADIUS_KM } = require('./lib/geo');
 const { wards, getWard } = require('./lib/wards');
+const { buildBrief } = require('./lib/brief');
+const { prefetchHourlyForecast } = require('./adapters/hourlyForecast');
 
 const SCOPES = ['global', 'local'];
 
@@ -63,6 +65,21 @@ app.get('/health', async (req, res, next) => {
 app.get('/api/wards', (req, res) => res.json(wards));
 app.get('/api/wards/:id', (req, res) => { const ward = getWard(req.params.id); return ward ? res.json(ward) : res.status(404).json({ error: 'ward not found' }); });
 
+// GET /api/brief?lat=..&lng=..  (defaults to Amer)
+// One-line "now + next hours + what to do" summary for a point, plus the structured items.
+// Reads cached events and the point's cached hourly forecast; a cold point starts a
+// background forecast fetch and answers with forecast.pending=true (poll again shortly).
+app.get('/api/brief', async (req, res, next) => {
+  const lat = Number(req.query.lat);
+  const lng = Number(req.query.lng);
+  const center = Number.isFinite(lat) && Math.abs(lat) <= 90 && Number.isFinite(lng) && Math.abs(lng) <= 180 ? { lat, lng } : { ...AMER };
+  try {
+    res.json(await buildBrief(center));
+  } catch (err) {
+    next(err);
+  }
+});
+
 // GET /api/sources - one row per source (live and planned/disabled), for the frontend's
 // "Data Sources" panel. keyConfigured is a boolean only; no key value is ever included.
 app.get('/api/sources', async (req, res, next) => {
@@ -106,6 +123,7 @@ if (require.main === module) {
     exposureBuild.unref();
     // Background refresh: every source on its own timer (including the ones above);
     // endpoints only read the cache.
+    if (!config.useMock) prefetchHourlyForecast(AMER.lat, AMER.lng);
     startScheduler().catch((err) => console.error('[server] scheduler failed to start:', err));
   });
   server.on('error', (err) => {

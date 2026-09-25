@@ -139,3 +139,43 @@ export function useHealth() {
   }, [])
   return state
 }
+
+const BRIEF_POLL_MS = 60_000
+const BRIEF_PENDING_RETRY_MS = 4_000 // cold point: the backend is fetching its forecast right now
+
+/** GET /api/brief for a point -> { brief, error }. Re-polls quickly while the forecast warms up. */
+export function useBrief({ lat, lng }) {
+  const [state, setState] = useState({ brief: null, error: null })
+
+  useEffect(() => {
+    let cancelled = false
+    let timer
+    const load = async () => {
+      let delay = BRIEF_POLL_MS
+      try {
+        const url = new URL(`${API_BASE}/api/brief`)
+        if (Number.isFinite(lat) && Number.isFinite(lng)) {
+          url.searchParams.set('lat', lat)
+          url.searchParams.set('lng', lng)
+        }
+        const res = await fetch(url, { headers: { Accept: 'application/json' }, cache: 'no-store' })
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        const brief = await res.json()
+        if (cancelled) return
+        setState({ brief, error: null })
+        if (brief.forecast?.pending) delay = BRIEF_PENDING_RETRY_MS
+      } catch (err) {
+        if (!cancelled) setState((prev) => ({ ...prev, error: err.message || 'request failed' }))
+      }
+      if (!cancelled) timer = setTimeout(load, delay)
+    }
+    setState({ brief: null, error: null })
+    load()
+    return () => {
+      cancelled = true
+      clearTimeout(timer)
+    }
+  }, [lat, lng])
+
+  return state
+}

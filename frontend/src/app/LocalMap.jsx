@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import L from 'leaflet'
-import { Circle, GeoJSON, MapContainer, Marker, TileLayer, Tooltip } from 'react-leaflet'
+import { Circle, GeoJSON, MapContainer, Marker, Polyline, TileLayer, Tooltip } from 'react-leaflet'
 import { Layers, LocateFixed } from 'lucide-react'
 import { toneOf } from '../lib/severity.js'
 import { useReducedMotion } from '../lib/useReducedMotion.js'
@@ -23,6 +23,10 @@ const TILE_ATTRIBUTION = 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
 const ESRI_MAX_ZOOM = 16
 
 const ZONE_COLOR = { light: '#2762c9', dark: '#6a9bff' }
+const TRANSIT_COLOR = { light: '#7a4fc4', dark: '#b894ff' }
+const ROUTE_COLOR = { light: '#1f8a5b', dark: '#5fd49a' }
+// Static JCTSL bus-route overlay, built by scripts/fetch-jctsl-ptal.js into frontend/public.
+const JCTSL_ROUTES_URL = '/data/jctsl-routes.geojson'
 const DEFAULT_ZOOM = 12
 
 // Reuses the app's existing pin shape/markup (see the earlier illustrative LocalMap) as a
@@ -60,6 +64,14 @@ export default function LocalMap({ center, events = [], radiusKm, wards = null, 
   const mapRef = useRef(null)
   const firstRender = useRef(true)
   const centerIcon = useMemo(() => pinIcon('blue', { halo: true }), [])
+  const [busRoutes, setBusRoutes] = useState(null)
+  const showTransit = layers.transit !== false
+  useEffect(() => {
+    if (!showTransit || busRoutes) return
+    fetch(JCTSL_ROUTES_URL).then((r) => (r.ok ? r.json() : null)).then(setBusRoutes).catch(() => {})
+  }, [showTransit, busRoutes])
+  // Bhuvan access routes carry their road geometry as [lng, lat] line arrays in raw.
+  const accessRoutes = events.filter((e) => e.layer === 'access_routes' && layers.access_routes !== false && Array.isArray(e.raw?.route_geometry))
 
   // MapContainer's `center` prop only sets the *initial* view; recenter explicitly whenever
   // the selected location changes after that (skip the redundant call on first mount).
@@ -103,6 +115,25 @@ export default function LocalMap({ center, events = [], radiusKm, wards = null, 
         <Marker position={[center.lat, center.lng]} icon={centerIcon} />
 
         {layers.wards !== false && wards && <GeoJSON data={wards} style={wardStyle} onEachFeature={onEachWard} />}
+
+        {showTransit && busRoutes && (
+          <GeoJSON
+            data={busRoutes}
+            style={{ color: TRANSIT_COLOR[theme], weight: 1.5, opacity: 0.55 }}
+            onEachFeature={(feature, layer) => layer.bindTooltip(`JCTSL bus route ${feature.properties.route}`, { sticky: true })}
+          />
+        )}
+
+        {accessRoutes.map((event) => (
+          <Polyline
+            key={`route-${event.id}`}
+            positions={event.raw.route_geometry.map((line) => line.map(([lng, lat]) => [lat, lng]))}
+            pathOptions={{ color: ROUTE_COLOR[theme], weight: 3, opacity: 0.75 }}
+            eventHandlers={{ click: () => onSelectEvent?.(event) }}
+          >
+            <Tooltip sticky>{event.title}</Tooltip>
+          </Polyline>
+        ))}
 
         {events.filter((event) => layers[event.layer] !== false && (layers.simulated !== false || event.tag !== 'SIMULATED')).map((event) => (
           <Marker

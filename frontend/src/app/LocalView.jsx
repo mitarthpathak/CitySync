@@ -4,7 +4,7 @@ import { API_BASE } from './useEvents.js'
 import LocalMap from './LocalMap.jsx'
 import LocationSelector from './LocationSelector.jsx'
 import Sparkline from './Sparkline.jsx'
-import { useEvents, useHealth } from './useEvents.js'
+import { useBrief, useEvents, useHealth } from './useEvents.js'
 import { nameOf, toneOf } from '../lib/severity.js'
 import { formatAgo } from '../lib/time.js'
 
@@ -24,12 +24,13 @@ function trafficReading(e) {
 export default function LocalView({ location, onLocationChange, onSelectEvent }) {
   const { events, radiusKm, lastUpdated } = useEvents({ scope: 'local', lat: location.lat, lng: location.lng })
   const health = useHealth()
+  const { brief } = useBrief({ lat: location.lat, lng: location.lng })
   const [wards, setWards] = useState(null)
-  const [layers, setLayers] = useState(() => { try { return JSON.parse(localStorage.getItem('citypulse-local-layers')) || { wards: true, aqi_station: true, waterlogging_risk: true, flood_forecast: true, rain_forecast: true, news: false, exposure: false, traffic: true, civic: true, pois: false, simulated: true } } catch { return {} } })
+  const [layers, setLayers] = useState(() => { try { return JSON.parse(localStorage.getItem('citypulse-local-layers')) || { wards: true, aqi_station: true, waterlogging_risk: true, flood_forecast: true, rain_forecast: true, news: false, exposure: false, traffic: true, civic: true, pois: true, transit: true, access_routes: true, climate: true, simulated: true } } catch { return {} } })
   useEffect(() => { fetch(`${API_BASE}/api/wards`).then((r) => r.ok ? r.json() : null).then(setWards).catch(() => {}) }, [])
   useEffect(() => { localStorage.setItem('citypulse-local-layers', JSON.stringify(layers)) }, [layers])
   const scoredWards = useMemo(() => wards ? { ...wards, features: wards.features.map((f) => { const relevant = events.filter((e) => e.ward_id === f.properties.ward_id); const hazard = relevant.reduce((n, e) => Math.max(n, e.severity * 20), 0); const exposure = f.properties.facility_count || 0; const impact = Math.round(hazard * Math.max(1, exposure) / 10); return { ...f, properties: { ...f.properties, hazard_score: hazard, exposure_score: exposure, impact, score: Math.min(100, Math.round(hazard * 0.7 + Math.min(exposure, 30))), confidence_score: relevant.some((e) => e.tag === 'SIMULATED') ? 55 : 75 } } }) } : null, [wards, events])
-  const chips = [['wards','Wards'],['aqi_station','AQI Stations'],['waterlogging_risk','Waterlogging Risk'],['flood_forecast','Flood Forecast'],['rain_forecast','Rain Forecast'],['news','News'],['exposure','Exposure'],['traffic','Traffic'],['civic','Civic Complaints'],['industrial_context','Industrial'],['historical_baseline','Baseline'],['pois','POIs'],['simulated','Simulated']]
+  const chips = [['wards','Wards'],['aqi_station','AQI Stations'],['waterlogging_risk','Waterlogging Risk'],['flood_forecast','Flood Forecast'],['rain_forecast','Rain Forecast'],['news','News'],['exposure','Exposure'],['traffic','Traffic'],['civic','Civic Complaints'],['industrial_context','Industrial'],['historical_baseline','Baseline'],['pois','POIs'],['transit','Transit (PTAL)'],['access_routes','Access Routes'],['climate','Satellite / Climate'],['simulated','Simulated']]
 
   // Everything below is derived from `events` (this location's real, backend-scoped feed) and
   // `location` - no more hardcoded Amer/Kunda copy left over from the original design mock-up.
@@ -117,7 +118,13 @@ export default function LocalView({ location, onLocationChange, onSelectEvent })
         <div className="cp-pulse-copy">
           <p className="cp-label">Area pulse</p>
           <h2>{headline}</h2>
-          <p>{summary}</p>
+          <p>{brief?.line || summary}</p>
+          {brief && (brief.next.length > 0 || brief.actions.length > 0) && (
+            <ul className="cp-brief">
+              {brief.next.filter((i) => i.kind !== 'rain' || i.window).slice(0, 2).map((i) => <li key={i.kind}><b>Next</b>{i.text}</li>)}
+              {brief.actions.slice(0, 2).map((a) => <li key={a}><b>Do</b>{a}</li>)}
+            </ul>
+          )}
         </div>
         <p className="cp-updated"><i />{updated}</p>
       </section>
