@@ -1,6 +1,6 @@
 import { useEffect, useId, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, BarChart3, Check, ChevronDown, Circle, CloudRain, Globe2, Menu, Moon, Radio, ShieldCheck, Sun, Waves, Wind, X } from 'lucide-react'
+import { ArrowRight, BarChart3, Check, ChevronDown, Circle, CloudRain, Github, Globe2, Linkedin, Menu, Moon, Radio, ShieldCheck, Sun, Waves, Wind, X } from 'lucide-react'
 import { CountUp, EntryFade, MotionLink, Reveal, ScrollProgressBar, StaggerGroup, StaggerItem } from './motion'
 
 const fragments = [
@@ -172,6 +172,40 @@ function Features() {
   )
 }
 
+const teamMembers = [
+  { name: 'Mitarth Pathak', initials: 'MP', role: 'Engineering, UI & 3D', linkedin: 'https://www.linkedin.com/in/mitarth-pathak/', github: 'https://github.com/mitarthpathak' },
+  { name: 'Navneet Singh', initials: 'NS', role: 'Technology & AI', linkedin: 'https://www.linkedin.com/in/navneet-singh99/', github: 'https://github.com/navneetsinghchaudhary' },
+  { name: 'Deep Panchal', initials: 'DP', role: 'Product & Vision', linkedin: 'https://www.linkedin.com/in/deep-panchal-3a1474399/', github: 'https://github.com/deeppanchal13' },
+  { name: 'Jayant Katariya', initials: 'JK', role: 'Development & Engineering', github: 'https://github.com/JayxCodemax' },
+]
+
+function TeamSection() {
+  return (
+    <div className="team-section">
+      <Reveal className="team-intro">
+        <p className="eyebrow">About us</p>
+        <h2>Building technology that helps people <em>understand their city.</em></h2>
+        <p className="team-description">Meet the team behind our civic-tech solution — combining engineering, design, product thinking, and research to turn scattered city information into something people can understand and act on.</p>
+      </Reveal>
+      <StaggerGroup className="team-grid" stagger={0.08}>
+        {teamMembers.map((member) => (
+          <StaggerItem key={member.name} as="article" className="team-card" whileHover={{ y: -5, transition: { duration: 0.15, ease: [0.16, 1, 0.3, 1] } }}>
+            <div className="team-avatar" aria-hidden="true">{member.initials}</div>
+            <div className="team-card-copy">
+              <h3>{member.name}</h3>
+              <p>{member.role}</p>
+            </div>
+            <div className="team-socials">
+              {member.linkedin && <a href={member.linkedin} target="_blank" rel="noopener noreferrer" aria-label={`${member.name} on LinkedIn`}><Linkedin /></a>}
+              <a href={member.github} target="_blank" rel="noopener noreferrer" aria-label={`${member.name} on GitHub`}><Github /></a>
+            </div>
+          </StaggerItem>
+        ))}
+      </StaggerGroup>
+    </div>
+  )
+}
+
 function TrustSection() {
   return (
     <section id="about" className="section trust-section">
@@ -186,6 +220,7 @@ function TrustSection() {
           </StaggerItem>
         </StaggerGroup>
       </div>
+      <div className="container"><TeamSection /></div>
     </section>
   )
 }
