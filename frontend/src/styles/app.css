@@ -117,7 +117,7 @@ body.cp-body {
    measured (header+hero+footer height), not guessed - see the PR/commit note if
    the header or hero's own height ever changes and this needs re-measuring. */
 .cp-globe-grid {
-  display: grid; grid-template-columns: 180px minmax(0, 1fr) 180px; height: calc(100vh - 248px);
+  display: grid; grid-template-columns: 190px minmax(0, 1fr) 180px; height: calc(100vh - 248px);
   min-height: 460px;
   border-top: 1px solid var(--cp-line);
 }
@@ -172,7 +172,7 @@ body.cp-body {
 .cp-feed-item svg { width: 14px; height: 14px; }
 
 /* ---- global view: layer chips, legend, ticker ------------------------------ */
-.cp-rail-left { overflow-y: auto; padding-right: 14px; scrollbar-width: thin; }
+.cp-rail-left { overflow-y: auto; padding-left: 10px; padding-right: 14px; scrollbar-width: thin; }
 .cp-chip--layer { width: 100%; }
 .cp-chip-label { flex: 1; text-align: left; white-space: nowrap; }
 .cp-chip-count { font-size: 10px; font-variant-numeric: tabular-nums; color: var(--cp-muted); }
