@@ -1,6 +1,7 @@
-import { useEffect, useId, useState } from 'react'
+import { useCallback, useEffect, useId, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, BarChart3, Check, ChevronDown, Circle, CloudRain, Globe2, Menu, Moon, Radio, ShieldCheck, Sun, Waves, Wind, X } from 'lucide-react'
+import AboutUs from './AboutUs'
 import { CountUp, EntryFade, MotionLink, Reveal, ScrollProgressBar, StaggerGroup, StaggerItem } from './motion'
 
 const fragments = [
@@ -39,7 +40,7 @@ function ThemeToggle() {
   return <button className="icon-button" onClick={toggle} aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}>{dark ? <Sun /> : <Moon />}</button>
 }
 
-function Nav() {
+function Nav({ onAbout }) {
   const [open, setOpen] = useState(false)
   return (
     <EntryFade as="header" className="site-nav" y={0} blur={0} duration={0.7} delay={0.5}>
@@ -48,7 +49,7 @@ function Nav() {
         <nav className={open ? 'nav-links is-open' : 'nav-links'} aria-label="Main navigation">
           <a href="#how-it-works" onClick={() => setOpen(false)}>How it works</a>
           <a href="#features" onClick={() => setOpen(false)}>Features</a>
-          <a href="#about" onClick={() => setOpen(false)}>About</a>
+          <button type="button" onClick={() => { setOpen(false); onAbout() }}>About us</button>
           <Link className="nav-cta" to="/app" onClick={() => setOpen(false)}>Enter the live app <ArrowRight /></Link>
         </nav>
         <div className="nav-actions">
@@ -207,15 +208,19 @@ function Stats() {
 }
 
 function Closing() { return <section id="enter" className="closing-section"><div className="container closing-inner"><Reveal as="p" className="eyebrow">The city, made legible</Reveal><Reveal as="h2" delay={0.08}>Take a better pulse<br /><em>on where you live.</em></Reveal><Reveal as={MotionLink} to="/app" className="button button-primary" delay={0.16} whileTap={{ scale: 0.97, transition: { duration: 0.15 } }}>Enter the live app <ArrowRight /></Reveal></div></section> }
-function Footer() { return <footer className="site-footer"><div className="container footer-inner"><Logo /><p>Clarity for living cities.</p><div><a href="#about">About</a><a href="#features">Features</a><a href="#top">Back to top ↑</a></div><small>© 2026 CitySync</small></div></footer> }
+function Footer({ onAbout }) { return <footer className="site-footer"><div className="container footer-inner"><Logo /><p>Clarity for living cities.</p><div><button type="button" onClick={onAbout}>About us</button><a href="#features">Features</a><a href="#top">Back to top ↑</a></div><small>© 2026 CitySync</small></div></footer> }
 
 export default function LandingPage() {
+  const [aboutOpen, setAboutOpen] = useState(false)
+  const openAbout = useCallback(() => setAboutOpen(true), [])
+  const closeAbout = useCallback(() => setAboutOpen(false), [])
   return (
     <>
       <ScrollProgressBar />
-      <Nav />
+      <Nav onAbout={openAbout} />
       <main id="top"><Hero /><Problem /><HowItWorks /><Features /><TrustSection /><Stats /><Closing /></main>
-      <Footer />
+      <Footer onAbout={openAbout} />
+      <AboutUs open={aboutOpen} onClose={closeAbout} />
     </>
   )
 }
